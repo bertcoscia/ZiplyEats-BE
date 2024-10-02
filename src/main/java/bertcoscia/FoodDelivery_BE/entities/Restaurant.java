@@ -32,7 +32,7 @@ public class Restaurant {
     @JoinColumn(name = "id_category")
     private RestaurantCategory restaurantCategory;
 
-    public Restaurant(String name, String address, String city, String email, String password, String phoneNumber, Menu menu, RestaurantCategory restaurantCategory) {
+    public Restaurant(String name, String address, String city, String email, String password, String phoneNumber, RestaurantCategory restaurantCategory) {
         this.name = name;
         this.address = address;
         this.city = city;
@@ -40,7 +40,6 @@ public class Restaurant {
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this.menu = menu;
         this.restaurantCategory = restaurantCategory;
     }
 }
