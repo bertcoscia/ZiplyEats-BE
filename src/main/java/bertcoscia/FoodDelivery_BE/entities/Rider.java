@@ -16,8 +16,8 @@ import lombok.ToString;
 public class Rider extends User {
     private double rating;
 
-    public Rider(String name, String surname, String email, String password, String phoneNumber, String address, String city, UserRole userRole, double rating) {
+    public Rider(String name, String surname, String email, String password, String phoneNumber, String address, String city, UserRole userRole) {
         super(name, surname, email, password, phoneNumber, address, city, userRole);
-        this.rating = rating;
+        this.rating = 0;
     }
 }
