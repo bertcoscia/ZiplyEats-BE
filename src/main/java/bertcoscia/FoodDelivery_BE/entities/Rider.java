@@ -1,5 +1,6 @@
 package bertcoscia.FoodDelivery_BE.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -15,6 +16,8 @@ import lombok.ToString;
 @ToString
 public class Rider extends User {
     private double rating;
+    @Column(name = "url_avatar")
+    private String avatarUrl;
 
     public Rider(String name, String surname, String email, String password, String phoneNumber, String address, String city, UserRole userRole) {
         super(name, surname, email, password, phoneNumber, address, city, userRole);

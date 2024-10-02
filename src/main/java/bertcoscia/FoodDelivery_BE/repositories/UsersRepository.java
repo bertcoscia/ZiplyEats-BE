@@ -1,7 +1,10 @@
 package bertcoscia.FoodDelivery_BE.repositories;
 
+import bertcoscia.FoodDelivery_BE.entities.Rider;
 import bertcoscia.FoodDelivery_BE.entities.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -11,6 +14,10 @@ import java.util.UUID;
 public interface UsersRepository extends JpaRepository<User, UUID> {
 
     Optional<User> findById(UUID id);
+
+    // TODO: ADD ID_ROLE = RIDER
+    @Query(value = "SELECT * FROM Users WHERE id_role = ")
+    Page<Rider> findAllRiders();
 
     boolean existsByEmail(String email);
 
