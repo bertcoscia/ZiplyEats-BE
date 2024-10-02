@@ -22,8 +22,8 @@ public record NewRestaurantsDTO(
         @NotEmpty(message = "Phone number cannot be empty")
                 @Size(min = 9, max = 10, message = "Phone number must contain between 9 and 10 digits")
         String phoneNumber,
-        @NotEmpty(message = "Category id cannot be empty")
-                @Size(min = 36, max = 36, message = "Restaurant id must be 36 characters long")
-        String idCategory
+        @Size(min = 36, max = 36, message = "Restaurant id must be 36 characters long")
+        String idCategory,
+        String restaurantCategory
 ) {
 }

@@ -14,5 +14,7 @@ public interface MenusRepository extends JpaRepository<Menu, UUID> {
 
     Optional<Menu> findById(UUID id);
 
+    Optional<Menu> findByRestaurantId(UUID idRestaurant);
+
     boolean existsByRestaurantId(UUID restaurantId);
 }

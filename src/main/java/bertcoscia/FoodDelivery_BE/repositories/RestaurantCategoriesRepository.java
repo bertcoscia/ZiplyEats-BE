@@ -12,5 +12,7 @@ public interface RestaurantCategoriesRepository extends JpaRepository<Restaurant
 
     Optional<RestaurantCategory> findById(UUID id);
 
+    Optional<RestaurantCategory> findByRestaurantCategory(String restaurantCategory);
+
     boolean existsByRestaurantCategory(String restaurantCategory);
 }
