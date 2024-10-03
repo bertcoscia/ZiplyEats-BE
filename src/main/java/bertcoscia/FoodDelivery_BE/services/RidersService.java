@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -42,7 +41,7 @@ public class RidersService {
     }
 
     public Rider findById(UUID id) {
-        return this.repository.findRiderById(id).orElseThrow(()-> new NotFoundException(id));
+        return this.repository.findRiderByIdUser(id).orElseThrow(()-> new NotFoundException(id));
     }
 
     public Page<User> findAll(int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {

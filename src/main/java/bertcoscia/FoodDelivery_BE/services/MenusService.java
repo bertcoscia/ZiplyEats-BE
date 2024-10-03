@@ -27,7 +27,7 @@ public class MenusService {
 
     public Menu save(NewMenusDTO body) {
         Restaurant restaurantFound = this.restaurantsService.findById(UUID.fromString(body.idRestaurant()));
-        if (this.repository.existsByRestaurantId(UUID.fromString(body.idRestaurant()))) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a menu");
+        if (this.repository.existsByRestaurantIdRestaurant(UUID.fromString(body.idRestaurant()))) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a menu");
         return this.repository.save(new Menu(restaurantFound));
     }
 
@@ -37,7 +37,7 @@ public class MenusService {
 
     public Menu findByResaturantId(UUID idRestaurant) {
         Restaurant restaurantFound = this.restaurantsService.findById(idRestaurant);
-        return this.repository.findByRestaurantId(idRestaurant).orElseThrow(()-> new NotFoundException("Could not find menu for the restaurant " + restaurantFound.getName()));
+        return this.repository.findByRestaurantIdRestaurant(idRestaurant).orElseThrow(()-> new NotFoundException("Could not find menu for the restaurant " + restaurantFound.getName()));
     }
 
     public Page<Menu> findAll(int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
@@ -53,7 +53,7 @@ public class MenusService {
 
     public Menu findByIdAndUpdate(UUID id, Menu body) {
         Menu found = this.findById(id);
-        if (this.repository.existsByRestaurantId(body.getRestaurant().getIdRestaurant()) && !found.getIdMenu().equals(body.getIdMenu())) throw new BadRequestException("The restaurant " + found.getRestaurant().getName() + " already has a menu");
+        if (this.repository.existsByRestaurantIdRestaurant(body.getRestaurant().getIdRestaurant()) && !found.getIdMenu().equals(body.getIdMenu())) throw new BadRequestException("The restaurant " + found.getRestaurant().getName() + " already has a menu");
         found.setProductList(body.getProductList());
         return this.repository.save(found);
     }

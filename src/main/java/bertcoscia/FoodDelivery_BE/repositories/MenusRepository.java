@@ -2,8 +2,6 @@ package bertcoscia.FoodDelivery_BE.repositories;
 
 import bertcoscia.FoodDelivery_BE.entities.Menu;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -14,7 +12,7 @@ public interface MenusRepository extends JpaRepository<Menu, UUID> {
 
     Optional<Menu> findById(UUID id);
 
-    Optional<Menu> findByRestaurantId(UUID idRestaurant);
+    Optional<Menu> findByRestaurantIdRestaurant(UUID idRestaurant);
 
-    boolean existsByRestaurantId(UUID restaurantId);
+    boolean existsByRestaurantIdRestaurant(UUID restaurantId);
 }
