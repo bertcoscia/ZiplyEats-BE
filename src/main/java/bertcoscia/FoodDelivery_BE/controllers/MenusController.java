@@ -79,11 +79,12 @@ public class MenusController {
     }
 
     @DeleteMapping("/:{idMenu}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('ADMIN')")
     public void findByIdAndDelete(UUID idMenu) {
         this.service.findByIdAndDelete(idMenu);
     }
 
-    
+
 
 }

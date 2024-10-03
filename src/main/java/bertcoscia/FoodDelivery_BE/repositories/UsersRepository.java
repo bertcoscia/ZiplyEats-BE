@@ -18,6 +18,8 @@ public interface UsersRepository extends JpaRepository<User, UUID>, JpaSpecifica
 
     Optional<User> findById(UUID id);
 
+    Optional<User> findByEmail(String email);
+
     Optional<Rider> findRiderById(UUID id);
 
     // TODO: ADD ID_ROLE = RIDER
@@ -27,4 +29,5 @@ public interface UsersRepository extends JpaRepository<User, UUID>, JpaSpecifica
     boolean existsByEmail(String email);
 
     boolean existsByPhoneNumber(String phoneNumber);
+
 }

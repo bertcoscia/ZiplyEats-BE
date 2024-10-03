@@ -6,6 +6,8 @@ import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
 import bertcoscia.FoodDelivery_BE.payloads.NewUsersDTO;
 import bertcoscia.FoodDelivery_BE.repositories.UsersRepository;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -60,5 +62,9 @@ public class UsersService {
         found.setEmail(body.getEmail());
         found.setCity(body.getCity());
         return this.repository.save(found);
+    }
+
+    public User findByEmail(String email) {
+        return this.repository.findByEmail(email).orElseThrow(()-> new NotFoundException("Could not find a user with email " + email));
     }
 }

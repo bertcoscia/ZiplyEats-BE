@@ -45,6 +45,10 @@ public class RestaurantsService {
         return this.repository.findById(id).orElseThrow(()-> new NotFoundException(id));
     }
 
+    public Restaurant findByEmail(String email) {
+        return this.repository.findByEmail(email).orElseThrow(()-> new NotFoundException("Could not find a restaurant with email " + email));
+    }
+
     public Page<Restaurant> findAll(int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
         if (page > 100) page = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));

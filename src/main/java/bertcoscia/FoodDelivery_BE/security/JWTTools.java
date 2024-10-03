@@ -1,5 +1,6 @@
 package bertcoscia.FoodDelivery_BE.security;
 
+import bertcoscia.FoodDelivery_BE.entities.Restaurant;
 import bertcoscia.FoodDelivery_BE.entities.User;
 import bertcoscia.FoodDelivery_BE.exceptions.UnauthorizedException;
 import io.jsonwebtoken.Jwts;
@@ -14,11 +15,20 @@ public class JWTTools {
     @Value("${jwt.secret}")
     private String secret;
 
-    public String createToken(User user) {
+    public String createUserToken(User user) {
         return Jwts.builder()
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
                 .subject(String.valueOf(user.getIdUser()))
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .compact();
+    }
+
+    public String createRestaurantToken(Restaurant restaurant) {
+        return Jwts.builder()
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
+                .subject(String.valueOf(restaurant.getIdRestaurant()))
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
                 .compact();
     }
