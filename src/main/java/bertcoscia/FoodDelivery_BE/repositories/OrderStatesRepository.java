@@ -12,5 +12,7 @@ public interface OrderStatesRepository extends JpaRepository<OrderState, UUID> {
 
     Optional<OrderState> findById(UUID id);
 
-    boolean existsByOrderState(String orderState);
+    Optional<OrderState> findByOrderStateIgnoreCase(String orderState);
+
+    boolean existsByOrderStateIgnoreCase(String orderState);
 }
