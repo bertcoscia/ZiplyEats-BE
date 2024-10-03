@@ -8,6 +8,7 @@ import bertcoscia.FoodDelivery_BE.repositories.OrderStatesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,5 +29,23 @@ public class OrderStatesService {
         return this.repository.findByOrderStateIgnoreCase(orderState).orElseThrow(()-> new NotFoundException("Could not find order state " + orderState));
     }
 
+    public List<OrderState> findAll() {
+        return this.repository.findAll();
+    }
+
+    public void findByIdAndDelete(UUID id) {
+        this.repository.delete(this.findById(id));
+    }
+
+    public void findByOrderStateAndDelete(String orderState) {
+        this.repository.delete(this.findByOrderState(orderState));
+    }
+
+    public OrderState findByIdAndUpdate(UUID id, OrderState body) {
+        OrderState found = this.findById(id);
+        if (this.repository.existsByOrderStateIgnoreCase(body.getOrderState()) && !found.getIdOrderState().equals(body.getIdOrderState())) throw new BadRequestException("Order state " + body.getOrderState() + " already existing");
+        found.setOrderState(body.getOrderState());
+        return this.repository.save(found);
+    }
 
 }

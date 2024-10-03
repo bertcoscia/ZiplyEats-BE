@@ -2,6 +2,7 @@ package bertcoscia.FoodDelivery_BE.services;
 
 import bertcoscia.FoodDelivery_BE.entities.Restaurant;
 import bertcoscia.FoodDelivery_BE.entities.RestaurantCategory;
+import bertcoscia.FoodDelivery_BE.entities.UserRole;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
 import bertcoscia.FoodDelivery_BE.payloads.NewRestaurantsDTO;
@@ -28,12 +29,16 @@ public class RestaurantsService {
     @Autowired
     PasswordEncoder bcrypt;
 
+    @Autowired
+    UserRolesService userRolesService;
+
     public Restaurant save(NewRestaurantsDTO body) {
         if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         if (this.repository.existsByNameAndAddressAndCity(body.name(), body.address(), body.city())) throw new BadRequestException("There is already a restaurant called " + body.name() + " in " + body.city() + " at the address " + body.address());
         RestaurantCategory restaurantCategory = this.restaurantsCategoriesService.findByRestaurantCategory(body.restaurantCategory());
-        return new Restaurant(body.name(), body.address(), body.city(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), restaurantCategory);
+        UserRole userRoleFound = this.userRolesService.findByUserRole("RESTAURANT");
+        return new Restaurant(body.name(), body.address(), body.city(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), restaurantCategory, userRoleFound);
     }
 
     public Restaurant findById(UUID id) {

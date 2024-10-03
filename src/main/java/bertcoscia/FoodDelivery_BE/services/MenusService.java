@@ -4,6 +4,7 @@ import bertcoscia.FoodDelivery_BE.entities.Menu;
 import bertcoscia.FoodDelivery_BE.entities.Restaurant;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
+import bertcoscia.FoodDelivery_BE.exceptions.UnauthorizedException;
 import bertcoscia.FoodDelivery_BE.payloads.NewMenusDTO;
 import bertcoscia.FoodDelivery_BE.repositories.MenusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,4 +58,13 @@ public class MenusService {
         return this.repository.save(found);
     }
 
+    public Menu updateMyMenu(Menu myMenu, Menu body) {
+        if (!myMenu.getRestaurant().getIdRestaurant().equals(body.getRestaurant().getIdRestaurant())) throw new UnauthorizedException("You do not have the permission to edit this item");
+        myMenu.setProductList(body.getProductList());
+        return this.repository.save(myMenu);
+    }
+
+    public void deleteMyMenu(Menu myMenu) {
+        this.repository.delete(myMenu);
+    }
 }
