@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -24,12 +25,15 @@ public class RestaurantsService {
     @Autowired
     RestaurantsCategoriesService restaurantsCategoriesService;
 
+    @Autowired
+    PasswordEncoder bcrypt;
+
     public Restaurant save(NewRestaurantsDTO body) {
         if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         if (this.repository.existsByNameAndAddressAndCity(body.name(), body.address(), body.city())) throw new BadRequestException("There is already a restaurant called " + body.name() + " in " + body.city() + " at the address " + body.address());
         RestaurantCategory restaurantCategory = this.restaurantsCategoriesService.findByRestaurantCategory(body.restaurantCategory());
-        return new Restaurant(body.name(), body.address(), body.city(), body.email(), body.password(), body.phoneNumber(), restaurantCategory);
+        return new Restaurant(body.name(), body.address(), body.city(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), restaurantCategory);
     }
 
     public Restaurant findById(UUID id) {

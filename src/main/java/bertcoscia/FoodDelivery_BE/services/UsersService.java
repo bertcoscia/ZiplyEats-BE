@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -24,11 +25,14 @@ public class UsersService {
     @Autowired
     UserRolesService userRolesService;
 
+    @Autowired
+    PasswordEncoder bcrypt;
+
     public User save(NewUsersDTO body) {
         if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         UserRole userRole = this.userRolesService.findByUserRole("USER");
-        return this.repository.save(new User(body.name(), body.surname(), body.email(), body.password(), body.phoneNumber(), body.address(), body.city(), userRole));
+        return this.repository.save(new User(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRole));
     }
 
     public User findById(UUID id) {

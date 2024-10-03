@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -28,11 +29,14 @@ public class RidersService {
     @Autowired
     UserRolesService userRolesService;
 
+    @Autowired
+    PasswordEncoder bcrypt;
+
     public Rider save(NewUsersDTO body) {
         if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         UserRole userRole = this.userRolesService.findByUserRole("RIDER");
-        Rider newRider = new Rider(body.name(), body.surname(), body.email(), body.password(), body.phoneNumber(), body.address(), body.city(), userRole);
+        Rider newRider = new Rider(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRole);
         newRider.setAvatarUrl("https://ui-avatars.com/api/?name=" + newRider.getName() + "+" + newRider.getSurname());
         return this.repository.save(newRider);
     }
