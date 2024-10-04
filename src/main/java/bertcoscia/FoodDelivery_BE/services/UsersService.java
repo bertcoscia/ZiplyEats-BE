@@ -16,6 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
@@ -35,7 +38,11 @@ public class UsersService {
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         UserRole userRole = this.userRolesService.findByUserRole("USER");
         User newUser = new User(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRole);
-        newUser.setAvatarUrl("https://ui-avatars.com/api/?name=" + newUser.getName() + "+" + newUser.getSurname() + "&background=048C7A&color=fff");
+        String encodedName;
+        String encodedSurname;
+        encodedName = URLEncoder.encode(newUser.getName(), StandardCharsets.UTF_8);
+        encodedSurname = URLEncoder.encode(newUser.getSurname(), StandardCharsets.UTF_8);
+        newUser.setAvatarUrl("https://ui-avatars.com/api/?name=" + encodedName + "+" + encodedSurname + "&background=048C7A&color=fff");
         return this.repository.save(newUser);
     }
 
@@ -64,6 +71,13 @@ public class UsersService {
         found.setAddress(body.getAddress());
         found.setCity(body.getCity());
         found.setCity(body.getCity());
+        if (found.getAvatarUrl().contains("https://ui-avatars.com/api/?name=")) {
+            String encodedName;
+            String encodedSurname;
+            encodedName = URLEncoder.encode(body.getName(), StandardCharsets.UTF_8);
+            encodedSurname = URLEncoder.encode(body.getSurname(), StandardCharsets.UTF_8);
+            found.setAvatarUrl("https://ui-avatars.com/api/?name=" + encodedName + "+" + encodedSurname + "&background=048C7A&color=fff");
+        }
         return this.repository.save(found);
     }
 

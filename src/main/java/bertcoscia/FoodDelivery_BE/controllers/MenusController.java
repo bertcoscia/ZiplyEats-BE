@@ -41,7 +41,7 @@ public class MenusController {
     @GetMapping("/my-menus")
     @PreAuthorize("hasAuthority('RESTAURANT')")
     public Menu findMyMenu(@AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
-        return this.service.findByResaturantId(currentAuthenticatedRestaurant.getIdRestaurant());
+        return this.service.findByResaturantId(currentAuthenticatedRestaurant.getIdUser());
     }
 
     @PutMapping("/my-menus")

@@ -13,8 +13,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DiscriminatorValue("user")
 @NoArgsConstructor
 @Getter
@@ -44,6 +43,16 @@ public class User implements UserDetails {
     public User(String name, String surname, String email, String password, String phoneNumber, String address, String city, UserRole userRole) {
         this.name = name;
         this.surname = surname;
+        this.email = email;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.city = city;
+        this.userRole = userRole;
+    }
+
+    public User(String name, String email, String password, String phoneNumber, String address, String city, UserRole userRole) {
+        this.name = name;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;

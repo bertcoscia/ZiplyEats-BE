@@ -39,6 +39,6 @@ public class RestaurantsController {
 
     @GetMapping("/my-restaurant")
     public Restaurant getMyRestaurant(@AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
-        return this.service.findById(currentAuthenticatedRestaurant.getIdRestaurant());
+        return this.service.findById(currentAuthenticatedRestaurant.getIdUser());
     }
 }

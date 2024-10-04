@@ -15,6 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
@@ -43,11 +46,15 @@ public class RestaurantsService {
             restaurantCategory = this.restaurantsCategoriesService.findById(UUID.fromString(body.idCategory()));
         }
         UserRole userRoleFound = this.userRolesService.findByUserRole("RESTAURANT");
-        return this.repository.save(new Restaurant(body.name(), body.address(), body.city(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), restaurantCategory, userRoleFound));
+        Restaurant newRestaurant = new Restaurant(body.name(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRoleFound, restaurantCategory);
+        String encodedName;
+        encodedName = URLEncoder.encode(newRestaurant.getName(), StandardCharsets.UTF_8);
+        newRestaurant.setAvatarUrl("https://ui-avatars.com/api/?name=" + encodedName + "&background=048C7A&color=fff");
+        return this.repository.save(newRestaurant);
     }
 
     public Restaurant findById(UUID id) {
-        return this.repository.findByIdRestaurant(id).orElseThrow(()-> new NotFoundException(id));
+        return this.repository.findByIdUser(id).orElseThrow(()-> new NotFoundException(id));
     }
 
     public Restaurant findByEmail(String email) {
@@ -67,9 +74,9 @@ public class RestaurantsService {
 
     public Restaurant findByIdAndUpdate(UUID id, Restaurant body) {
         Restaurant found = this.findById(id);
-        if (this.repository.existsByEmail(body.getEmail()) && !found.getIdRestaurant().equals(body.getIdRestaurant())) throw new BadRequestException("Email already used");
-        if (this.repository.existsByPhoneNumber(body.getPhoneNumber()) && !found.getIdRestaurant().equals(body.getIdRestaurant())) throw new BadRequestException("Phone number already used");
-        if (this.repository.existsByNameAndAddressAndCity(body.getName(), body.getAddress(), body.getCity()) && !found.getIdRestaurant().equals(body.getIdRestaurant())) throw new BadRequestException("There is already a restaurant called " + body.getName() + " in " + body.getCity() + " at the address " + body.getAddress());
+        if (this.repository.existsByEmail(body.getEmail()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("Email already used");
+        if (this.repository.existsByPhoneNumber(body.getPhoneNumber()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("Phone number already used");
+        if (this.repository.existsByNameAndAddressAndCity(body.getName(), body.getAddress(), body.getCity()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("There is already a restaurant called " + body.getName() + " in " + body.getCity() + " at the address " + body.getAddress());
         found.setAddress(body.getAddress());
         found.setCity(body.getCity());
         found.setName(body.getName());

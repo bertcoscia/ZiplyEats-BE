@@ -66,7 +66,7 @@ public class AuthController {
                     .collect(Collectors.joining(". "));
             throw new BadRequestException(messages);
         } else {
-            return new NewEntitiesRespDTO(this.restaurantsService.save(body).getIdRestaurant());
+            return new NewEntitiesRespDTO(this.restaurantsService.save(body).getIdUser());
         }
     }
 
