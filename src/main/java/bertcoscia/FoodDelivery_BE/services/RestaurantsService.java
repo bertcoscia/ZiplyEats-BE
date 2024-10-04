@@ -5,6 +5,7 @@ import bertcoscia.FoodDelivery_BE.entities.RestaurantCategory;
 import bertcoscia.FoodDelivery_BE.entities.UserRole;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
+import bertcoscia.FoodDelivery_BE.payloads.EditRestaurantsDTO;
 import bertcoscia.FoodDelivery_BE.payloads.NewRestaurantsDTO;
 import bertcoscia.FoodDelivery_BE.repositories.RestaurantsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,17 +73,16 @@ public class RestaurantsService {
         this.repository.delete(found);
     }
 
-    public Restaurant findByIdAndUpdate(UUID id, Restaurant body) {
+    public Restaurant findByIdAndUpdate(UUID id, EditRestaurantsDTO body) {
         Restaurant found = this.findById(id);
-        if (this.repository.existsByEmail(body.getEmail()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("Email already used");
-        if (this.repository.existsByPhoneNumber(body.getPhoneNumber()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("Phone number already used");
-        if (this.repository.existsByNameAndAddressAndCity(body.getName(), body.getAddress(), body.getCity()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("There is already a restaurant called " + body.getName() + " in " + body.getCity() + " at the address " + body.getAddress());
-        found.setAddress(body.getAddress());
-        found.setCity(body.getCity());
-        found.setName(body.getName());
-        found.setMenu(body.getMenu());
-        found.setEmail(body.getEmail());
-        found.setPhoneNumber(body.getPhoneNumber());
+        if (this.repository.existsByEmail(body.email()) && !found.getIdUser().equals(id)) throw new BadRequestException("Email already used");
+        if (this.repository.existsByPhoneNumber(body.phoneNumber()) && !found.getIdUser().equals(id)) throw new BadRequestException("Phone number already used");
+        if (this.repository.existsByNameAndAddressAndCity(body.name(), body.address(), body.city()) && !found.getIdUser().equals(id)) throw new BadRequestException("There is already a restaurant called " + body.name() + " in " + body.city() + " at the address " + body.address());
+        found.setAddress(body.address());
+        found.setCity(body.city());
+        found.setName(body.name());
+        found.setEmail(body.email());
+        found.setPhoneNumber(body.phoneNumber());
         return this.repository.save(found);
     }
 }

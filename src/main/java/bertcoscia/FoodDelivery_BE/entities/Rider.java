@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
+@DiscriminatorValue("rider")
 @NoArgsConstructor
 @Getter
 @Setter

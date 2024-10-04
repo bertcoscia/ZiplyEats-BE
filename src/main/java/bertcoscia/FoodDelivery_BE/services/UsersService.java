@@ -4,10 +4,9 @@ import bertcoscia.FoodDelivery_BE.entities.User;
 import bertcoscia.FoodDelivery_BE.entities.UserRole;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
+import bertcoscia.FoodDelivery_BE.payloads.EditUsersDTO;
 import bertcoscia.FoodDelivery_BE.payloads.NewUsersDTO;
 import bertcoscia.FoodDelivery_BE.repositories.UsersRepository;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -60,22 +58,21 @@ public class UsersService {
         this.repository.delete(this.findById(id));
     }
 
-    public User findByIdAndUpdate(UUID id, User body) {
+    public User findByIdAndUpdate(UUID id, EditUsersDTO body) {
         User found = this.findById(id);
-        if (this.repository.existsByEmail(body.getEmail()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("Email already used");
-        if (this.repository.existsByPhoneNumber(body.getPhoneNumber()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("Phone number already used dufahfdsa");
-        found.setName(body.getName());
-        found.setSurname(body.getSurname());
-        found.setEmail(body.getEmail());
-        found.setPhoneNumber(body.getPhoneNumber());
-        found.setAddress(body.getAddress());
-        found.setCity(body.getCity());
-        found.setCity(body.getCity());
+        if (this.repository.existsByEmail(body.email()) && !found.getIdUser().equals(id)) throw new BadRequestException("Email already used");
+        if (this.repository.existsByPhoneNumber(body.phoneNumber()) && !found.getIdUser().equals(id)) throw new BadRequestException("Phone number already used dufahfdsa");
+        found.setName(body.name());
+        found.setSurname(body.surname());
+        found.setEmail(body.email());
+        found.setPhoneNumber(body.phoneNumber());
+        found.setAddress(body.address());
+        found.setCity(body.city());
         if (found.getAvatarUrl().contains("https://ui-avatars.com/api/?name=")) {
             String encodedName;
             String encodedSurname;
-            encodedName = URLEncoder.encode(body.getName(), StandardCharsets.UTF_8);
-            encodedSurname = URLEncoder.encode(body.getSurname(), StandardCharsets.UTF_8);
+            encodedName = URLEncoder.encode(body.name(), StandardCharsets.UTF_8);
+            encodedSurname = URLEncoder.encode(body.surname(), StandardCharsets.UTF_8);
             found.setAvatarUrl("https://ui-avatars.com/api/?name=" + encodedName + "+" + encodedSurname + "&background=048C7A&color=fff");
         }
         return this.repository.save(found);

@@ -2,6 +2,7 @@ package bertcoscia.FoodDelivery_BE.controllers;
 
 import bertcoscia.FoodDelivery_BE.entities.User;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
+import bertcoscia.FoodDelivery_BE.payloads.EditUsersDTO;
 import bertcoscia.FoodDelivery_BE.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,7 +49,7 @@ public class UsersController {
     }
 
     @PutMapping("/me")
-    public User updateMyProfile(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody @Validated User body, BindingResult validationResult) {
+    public User updateMyProfile(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody @Validated EditUsersDTO body, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -73,7 +74,7 @@ public class UsersController {
 
     @PutMapping("/{idUser}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public User findByIdAndUpdate(@PathVariable UUID idUser, @RequestBody @Validated User body, BindingResult validationResult) {
+    public User findByIdAndUpdate(@PathVariable UUID idUser, @RequestBody @Validated EditUsersDTO body, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
