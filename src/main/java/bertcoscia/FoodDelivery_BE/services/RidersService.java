@@ -5,6 +5,7 @@ import bertcoscia.FoodDelivery_BE.entities.User;
 import bertcoscia.FoodDelivery_BE.entities.UserRole;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
+import bertcoscia.FoodDelivery_BE.payloads.EditUsersDTO;
 import bertcoscia.FoodDelivery_BE.payloads.NewUsersDTO;
 import bertcoscia.FoodDelivery_BE.repositories.UsersRepository;
 import bertcoscia.FoodDelivery_BE.specs.UsersSpec;
@@ -17,6 +18,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 
@@ -55,15 +58,23 @@ public class RidersService {
         this.repository.delete(this.findById(id));
     }
 
-    public Rider findByIdAndUpdate(UUID id, Rider body) {
+    public Rider findByIdAndUpdate(UUID id, EditUsersDTO body) {
         Rider found = this.findById(id);
-        if (this.repository.existsByPhoneNumber(body.getPhoneNumber()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("Phone number already used");
-        if (this.repository.existsByEmail(body.getEmail()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("Email already used");
-        found.setName(body.getName());
-        found.setSurname(body.getSurname());
-        found.setCity(body.getCity());
-        found.setAddress(body.getAddress());
-        found.setPhoneNumber(body.getPhoneNumber());
+        if (this.repository.existsByPhoneNumber(body.phoneNumber()) && !found.getIdUser().equals(id)) throw new BadRequestException("Phone number already used");
+        if (this.repository.existsByEmail(body.email()) && !found.getIdUser().equals(id)) throw new BadRequestException("Email already used");
+        found.setName(body.name());
+        found.setSurname(body.surname());
+        found.setEmail(body.email());
+        found.setPhoneNumber(body.phoneNumber());
+        found.setAddress(body.address());
+        found.setCity(body.city());
+        if (found.getAvatarUrl().contains("https://ui-avatars.com/api/?name=")) {
+            String encodedName;
+            String encodedSurname;
+            encodedName = URLEncoder.encode(body.name(), StandardCharsets.UTF_8);
+            encodedSurname = URLEncoder.encode(body.surname(), StandardCharsets.UTF_8);
+            found.setAvatarUrl("https://ui-avatars.com/api/?name=" + encodedName + "+" + encodedSurname + "&background=048C7A&color=fff");
+        }
         return this.repository.save(found);
     }
 }

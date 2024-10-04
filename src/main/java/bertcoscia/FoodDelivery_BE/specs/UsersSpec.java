@@ -8,7 +8,10 @@ public class UsersSpec {
 
     public static Specification<User> isRider(String role) {
         return (root, query, criteriaBuilder) -> {
-            return criteriaBuilder.equal(criteriaBuilder.lower(root.get("role").get("userRole")), role.toLowerCase());
+            return criteriaBuilder.equal(
+                    criteriaBuilder.lower(root.get("userRole").get("userRole")),
+                    role.toLowerCase()
+            );
         };
     }
 
