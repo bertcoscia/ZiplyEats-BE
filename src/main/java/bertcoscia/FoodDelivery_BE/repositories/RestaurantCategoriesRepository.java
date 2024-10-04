@@ -12,7 +12,7 @@ public interface RestaurantCategoriesRepository extends JpaRepository<Restaurant
 
     Optional<RestaurantCategory> findById(UUID id);
 
-    Optional<RestaurantCategory> findByRestaurantCategory(String restaurantCategory);
+    Optional<RestaurantCategory> findByRestaurantCategoryIgnoreCase(String restaurantCategory);
 
     boolean existsByRestaurantCategory(String restaurantCategory);
 }

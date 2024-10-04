@@ -10,7 +10,7 @@ import java.util.UUID;
 @Repository
 public interface RestaurantsRepository extends JpaRepository<Restaurant, UUID> {
 
-    Optional<Restaurant> findById(UUID id);
+    Optional<Restaurant> findByIdRestaurant(UUID id);
 
     Optional<Restaurant> findByEmail(String email);
 

@@ -34,7 +34,9 @@ public class UsersService {
         if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         UserRole userRole = this.userRolesService.findByUserRole("USER");
-        return this.repository.save(new User(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRole));
+        User newUser = new User(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRole);
+        newUser.setAvatarUrl("https://ui-avatars.com/api/?name=" + newUser.getName() + "+" + newUser.getSurname() + "&background=048C7A&color=fff");
+        return this.repository.save(newUser);
     }
 
     public User findById(UUID id) {
@@ -54,12 +56,13 @@ public class UsersService {
     public User findByIdAndUpdate(UUID id, User body) {
         User found = this.findById(id);
         if (this.repository.existsByEmail(body.getEmail()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("Email already used");
-        if (this.repository.existsByPhoneNumber(body.getPhoneNumber()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("Phone number already used");
-        found.setAddress(body.getAddress());
-        found.setCity(body.getCity());
+        if (this.repository.existsByPhoneNumber(body.getPhoneNumber()) && !found.getIdUser().equals(body.getIdUser())) throw new BadRequestException("Phone number already used dufahfdsa");
         found.setName(body.getName());
         found.setSurname(body.getSurname());
         found.setEmail(body.getEmail());
+        found.setPhoneNumber(body.getPhoneNumber());
+        found.setAddress(body.getAddress());
+        found.setCity(body.getCity());
         found.setCity(body.getCity());
         return this.repository.save(found);
     }

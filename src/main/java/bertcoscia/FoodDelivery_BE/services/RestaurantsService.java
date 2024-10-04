@@ -36,13 +36,18 @@ public class RestaurantsService {
         if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         if (this.repository.existsByNameAndAddressAndCity(body.name(), body.address(), body.city())) throw new BadRequestException("There is already a restaurant called " + body.name() + " in " + body.city() + " at the address " + body.address());
-        RestaurantCategory restaurantCategory = this.restaurantsCategoriesService.findByRestaurantCategory(body.restaurantCategory());
+        RestaurantCategory restaurantCategory;
+        if (body.idCategory() == null || body.idCategory().isEmpty()) {
+            restaurantCategory = this.restaurantsCategoriesService.findByRestaurantCategory(body.restaurantCategory());
+        } else {
+            restaurantCategory = this.restaurantsCategoriesService.findById(UUID.fromString(body.idCategory()));
+        }
         UserRole userRoleFound = this.userRolesService.findByUserRole("RESTAURANT");
-        return new Restaurant(body.name(), body.address(), body.city(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), restaurantCategory, userRoleFound);
+        return this.repository.save(new Restaurant(body.name(), body.address(), body.city(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), restaurantCategory, userRoleFound));
     }
 
     public Restaurant findById(UUID id) {
-        return this.repository.findById(id).orElseThrow(()-> new NotFoundException(id));
+        return this.repository.findByIdRestaurant(id).orElseThrow(()-> new NotFoundException(id));
     }
 
     public Restaurant findByEmail(String email) {

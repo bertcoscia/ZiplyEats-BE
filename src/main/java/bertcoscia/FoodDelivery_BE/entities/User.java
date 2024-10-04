@@ -38,6 +38,8 @@ public class User implements UserDetails {
     @ManyToOne
     @JoinColumn(name = "id_role")
     private UserRole userRole;
+    @Column(name = "url_avatar")
+    private String avatarUrl;
 
     public User(String name, String surname, String email, String password, String phoneNumber, String address, String city, UserRole userRole) {
         this.name = name;

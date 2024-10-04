@@ -29,7 +29,7 @@ public class UsersController {
     public Page<User> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "surname") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection,
             @RequestParam Map<String, String> params) {
         Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
@@ -40,6 +40,11 @@ public class UsersController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public User findById(@PathVariable UUID idUser) {
         return this.service.findById(idUser);
+    }
+
+    @GetMapping("/me")
+    public User getMyProfile(@AuthenticationPrincipal User currentAuthenticatedUser) {
+        return this.service.findById(currentAuthenticatedUser.getIdUser());
     }
 
     @PutMapping("/me")
@@ -59,13 +64,25 @@ public class UsersController {
         this.service.findByIdAndDelete(currentAuthenticatedUser.getIdUser());
     }
 
-    @DeleteMapping("/:{idUser}")
+    @DeleteMapping("/{idUser}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('ADMIN')")
     public void findByIdAndDelete(@PathVariable UUID idUser) {
         this.service.findByIdAndDelete(idUser);
     }
 
+    @PutMapping("/{idUser}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public User findByIdAndUpdate(@PathVariable UUID idUser, @RequestBody @Validated User body, BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining("/ "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.findByIdAndUpdate(idUser, body);
+        }
+    }
 
 
 }

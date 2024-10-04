@@ -1,5 +1,6 @@
 package bertcoscia.FoodDelivery_BE.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
+@JsonIgnoreProperties({"idCategory"})
 public class RestaurantCategory {
     @Id
     @GeneratedValue

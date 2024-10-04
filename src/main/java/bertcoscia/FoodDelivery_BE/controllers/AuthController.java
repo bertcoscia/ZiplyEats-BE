@@ -90,7 +90,7 @@ public class AuthController {
                     .collect(Collectors.joining(". "));
             throw new BadRequestException(messages);
         } else {
-            return new LoginRespDTO(this.service.userCheckCredentialsAndGenerateToken(body));
+            return new LoginRespDTO(this.service.restaurantCheckCredentialsAndGenerateToken(body));
         }
     }
 

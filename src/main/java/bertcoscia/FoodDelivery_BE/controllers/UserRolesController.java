@@ -1,10 +1,10 @@
 package bertcoscia.FoodDelivery_BE.controllers;
 
-import bertcoscia.FoodDelivery_BE.entities.RestaurantCategory;
+import bertcoscia.FoodDelivery_BE.entities.UserRole;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.payloads.NewEntitiesRespDTO;
-import bertcoscia.FoodDelivery_BE.payloads.NewRestaurantCategoriesDTO;
-import bertcoscia.FoodDelivery_BE.services.RestaurantsCategoriesService;
+import bertcoscia.FoodDelivery_BE.payloads.NewUserRolesDTO;
+import bertcoscia.FoodDelivery_BE.services.UserRolesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -15,71 +15,71 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/restaurant-categories")
-public class RestaurantCategoriesController {
+@RequestMapping("/user-roles")
+public class UserRolesController {
     @Autowired
-    RestaurantsCategoriesService service;
+    UserRolesService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public NewEntitiesRespDTO save(@RequestBody @Validated NewRestaurantCategoriesDTO body, BindingResult validationResult) {
+    public NewEntitiesRespDTO save(@RequestBody @Validated NewUserRolesDTO body, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
                     .collect(Collectors.joining(". "));
             throw new BadRequestException(messages);
         } else {
-            return new NewEntitiesRespDTO(this.service.save(body).getIdCategory());
+            return new NewEntitiesRespDTO(this.service.save(body).getIdRole());
         }
     }
 
     @GetMapping
-    public Page<RestaurantCategory> findAll(
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Page<UserRole> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "asc") String sortDirection,
-            @RequestParam Map<String, String> params) {
+            @RequestParam(defaultValue = "userRole") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection) {
         Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        String sortBy = "restaurantCategory";
-        return this.service.findAll(page, size, sortBy, direction, params);
+        return this.service.findAll(page, size, sortBy, direction);
     }
 
-    @GetMapping("/id/{idRestaurantCategory}")
+    @GetMapping("/id/{idUserRole}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public RestaurantCategory findById(@PathVariable UUID idRestaurantCategory) {
-        return this.service.findById(idRestaurantCategory);
+    public UserRole findById(@PathVariable UUID idUserRole) {
+        return this.service.findById(idUserRole);
     }
 
-    @GetMapping("/category/{restaurantCategory}")
+    @GetMapping("/role/{userRole}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public RestaurantCategory findByRestaurantCategory(@PathVariable String restaurantCategory) {
-        return this.service.findByRestaurantCategory(restaurantCategory);
+    public UserRole findByUserRole(@PathVariable String userRole) {
+        return this.service.findByUserRole(userRole);
     }
 
-    @DeleteMapping("/{idRestaurantCategory}")
+    @DeleteMapping("/{idUserRole}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public void findByIdAndDelete(@PathVariable UUID idRestaurantCategory) {
-        this.service.findByIdAndDelete(idRestaurantCategory);
+    public void findByIdAndDelete(@PathVariable UUID idUserRole) {
+        this.service.findByIdAndDelete(idUserRole);
     }
 
-    @PutMapping("/{idRestaurantCategory}")
+    @PutMapping("/{idUserRole}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public RestaurantCategory findByIdAndUpdate(@PathVariable UUID idRestaurantCategory, @RequestBody @Validated RestaurantCategory body, BindingResult validationResult) {
+    public UserRole findByIdAndUpdate(@PathVariable UUID idUserRole, @RequestBody @Validated UserRole body, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
                     .collect(Collectors.joining(". "));
             throw new BadRequestException(messages);
         } else {
-            return this.service.findByIdAndUpdate(idRestaurantCategory, body);
+            return this.service.findByIdAndUpdate(idUserRole, body);
         }
     }
+
 }

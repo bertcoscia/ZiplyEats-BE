@@ -1,6 +1,5 @@
 package bertcoscia.FoodDelivery_BE.services;
 
-import bertcoscia.FoodDelivery_BE.entities.Restaurant;
 import bertcoscia.FoodDelivery_BE.entities.UserRole;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -31,10 +29,10 @@ public class UserRolesService {
     }
 
     public UserRole findByUserRole(String userRole) {
-        return this.repository.findByUserRole(userRole).orElseThrow(()-> new NotFoundException("Could not find role " + userRole));
+        return this.repository.findByUserRoleIgnoreCase(userRole).orElseThrow(()-> new NotFoundException("Could not find role " + userRole));
     }
 
-    public Page<UserRole> findAll(int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public Page<UserRole> findAll(int page, int size, String sortBy, Sort.Direction direction) {
         if (page > 5) page = 5;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAll(pageable);

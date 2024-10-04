@@ -11,4 +11,6 @@ public class UsersSpec {
             return criteriaBuilder.equal(criteriaBuilder.lower(root.get("role").get("userRole")), role.toLowerCase());
         };
     }
+
+
 }

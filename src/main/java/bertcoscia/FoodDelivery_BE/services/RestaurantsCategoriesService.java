@@ -26,7 +26,7 @@ public class RestaurantsCategoriesService {
     }
 
     public RestaurantCategory findByRestaurantCategory(String restaurantCategory) {
-        return this.repository.findByRestaurantCategory(restaurantCategory).orElseThrow(()-> new NotFoundException("Could not find restaurant category " + restaurantCategory));
+        return this.repository.findByRestaurantCategoryIgnoreCase(restaurantCategory).orElseThrow(()-> new NotFoundException("Could not find restaurant category " + restaurantCategory));
     }
 
     public RestaurantCategory findById(UUID id) {
