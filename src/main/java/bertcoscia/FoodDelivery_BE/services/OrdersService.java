@@ -2,6 +2,7 @@ package bertcoscia.FoodDelivery_BE.services;
 
 import bertcoscia.FoodDelivery_BE.entities.*;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
+import bertcoscia.FoodDelivery_BE.payloads.EditOrdersDTO;
 import bertcoscia.FoodDelivery_BE.payloads.NewOrdersDTO;
 import bertcoscia.FoodDelivery_BE.repositories.OrdersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +33,15 @@ public class OrdersService {
     @Autowired
     OrderStatesService orderStatesService;
 
-    public Order save(NewOrdersDTO body) {
-        User userFound = this.usersService.findById(UUID.fromString(body.idUser()));
+    public Order save(UUID idUser, NewOrdersDTO body) {
+        User userFound = this.usersService.findById(idUser);
         Restaurant restaurantFound = this.restaurantsService.findById(UUID.fromString(body.idRestaurant()));
         List<UUID> productIds = body.productList().stream()
                 .map(UUID::fromString)
                 .toList();
         List<Product> productList = this.productsService.findAllById(productIds);
         OrderState orderStateFound = this.orderStatesService.findByOrderState("order_sent");
-        return this.repository.save(new Order(userFound, restaurantFound, productList, orderStateFound));
+        return this.repository.save(new Order(userFound, restaurantFound, productList, body.deliveryAddress(), orderStateFound));
     }
 
     public Order findById(UUID id) {
@@ -64,6 +65,17 @@ public class OrdersService {
         orderFound.setRider(riderFound);
         return this.repository.save(orderFound);
     }
+
+    public Order findByIdAndUpdate(UUID idOrder, EditOrdersDTO body) {
+        Order found = this.findById(idOrder);
+        List<UUID> productIds = body.productList().stream()
+                .map(UUID::fromString)
+                .toList();
+        List<Product> productList = this.productsService.findAllById(productIds);
+        found.setProductList(productList);
+        return this.repository.save(found);
+    }
+
 
 
 }

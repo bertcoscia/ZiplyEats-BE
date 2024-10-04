@@ -37,11 +37,14 @@ public class Order {
             inverseJoinColumns = @JoinColumn(name = "id_product")
     )
     private List<Product> productList;
+    @Column(name = "delivery_address")
+    private String deliveryAddress;
 
-    public Order(User user, Restaurant restaurant, List<Product> productList, OrderState orderState) {
+    public Order(User user, Restaurant restaurant, List<Product> productList, String deliveryAddress, OrderState orderState) {
         this.user = user;
         this.restaurant = restaurant;
         this.productList = productList;
+        this.deliveryAddress = deliveryAddress;
         this.orderState = orderState;
     }
 }
