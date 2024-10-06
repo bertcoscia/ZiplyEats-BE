@@ -13,9 +13,9 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("user")
+@DiscriminatorValue("USER")
 @NoArgsConstructor
 @Getter
 @Setter

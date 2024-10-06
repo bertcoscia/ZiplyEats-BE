@@ -1,6 +1,7 @@
 package bertcoscia.FoodDelivery_BE.controllers;
 
 import bertcoscia.FoodDelivery_BE.entities.Order;
+import bertcoscia.FoodDelivery_BE.entities.Rider;
 import bertcoscia.FoodDelivery_BE.entities.User;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.payloads.EditOrdersDTO;
@@ -60,6 +61,30 @@ public class OrdersController {
         } else {
             return this.service.findByIdAndUpdate(idOrder, body);
         }
+    }
+
+    @PatchMapping("/{idOrder}")
+    @PreAuthorize("hasAuthority('RIDER')")
+    public Order assignRiderToOrder(@PathVariable UUID idOrder, @AuthenticationPrincipal Rider currentAuthenticatedRider) {
+        return this.service.assignRiderToOrder(idOrder, currentAuthenticatedRider.getIdUser());
+    }
+
+    @PatchMapping("/{idOrder}/finalise")
+    @PreAuthorize("hasAuthority('RIDER')")
+    public Order finaliseOrder(@PathVariable UUID idOrder) {
+        return this.service.finaliseOrder(idOrder);
+    }
+
+    @PatchMapping("/{idOrder}/cancel")
+    @PreAuthorize("hasAuthority('RIDER')")
+    public Order cancelOrder(@PathVariable UUID idOrder) {
+        return this.service.cancelOrder(idOrder);
+    }
+
+    @DeleteMapping("/{idOrder}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void findByIdAndDelete(@PathVariable UUID idOrder) {
+        this.service.findByIdAndDelete(idOrder);
     }
 
 }

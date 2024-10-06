@@ -7,22 +7,22 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_roles")
+@Table(name = "order_statuses")
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-@JsonIgnoreProperties({"idRole"})
-public class UserRole {
+@JsonIgnoreProperties({"idOrderStatus"})
+public class OrderStatus {
     @Id
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     @Column(name = "id")
-    private UUID idRole;
-    @Column(name = "user_role")
-    private String userRole;
+    private UUID idOrderStatus;
+    @Column(name = "order_status")
+    private String orderStatus;
 
-    public UserRole(String userRole) {
-        this.userRole = userRole;
+    public OrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }

@@ -77,4 +77,14 @@ public class RidersService {
         }
         return this.repository.save(found);
     }
+
+    public void setRiderAsBusy(Rider rider) {
+        rider.setBusyWithOrder(true);
+        this.repository.save(rider);
+    }
+
+    public void setRiderAvailable(Rider rider) {
+        rider.setBusyWithOrder(false);
+        this.repository.save(rider);
+    }
 }

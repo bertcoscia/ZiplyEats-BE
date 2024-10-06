@@ -28,8 +28,8 @@ public class Order {
     @JoinColumn(name = "id_rider")
     private Rider rider;
     @ManyToOne
-    @JoinColumn(name = "id_order_state", nullable = false)
-    private OrderState orderState;
+    @JoinColumn(name = "id_order_status", nullable = false)
+    private OrderStatus orderStatus;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "orders_products",
@@ -40,11 +40,11 @@ public class Order {
     @Column(name = "delivery_address")
     private String deliveryAddress;
 
-    public Order(User user, Restaurant restaurant, List<Product> productList, String deliveryAddress, OrderState orderState) {
+    public Order(User user, Restaurant restaurant, List<Product> productList, String deliveryAddress, OrderStatus orderStatus) {
         this.user = user;
         this.restaurant = restaurant;
         this.productList = productList;
         this.deliveryAddress = deliveryAddress;
-        this.orderState = orderState;
+        this.orderStatus = orderStatus;
     }
 }
