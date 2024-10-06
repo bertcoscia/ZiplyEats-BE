@@ -27,7 +27,7 @@ public class ExceptionsHandler {
     @ExceptionHandler(AuthorizationDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN) // 403
     public ErrorsRespDTO handleForbidden(AuthorizationDeniedException ex) {
-        return new ErrorsRespDTO("You do not have the permission to carry out the action", LocalDateTime.now());
+        return new ErrorsRespDTO("You do not have the permission to perform the requested action", LocalDateTime.now());
     }
 
     @ExceptionHandler(NotFoundException.class)

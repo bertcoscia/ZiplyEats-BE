@@ -6,9 +6,6 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public record NewOrdersDTO(
-        /*@NotEmpty(message = "User id required")
-        @Size(min = 36, max = 36, message = "Restaurant id must be 36 characters long")
-        String idUser,*/
         @NotEmpty(message = "Restaurant id required")
         @Size(min = 36, max = 36, message = "Restaurant id must be 36 characters long")
         String idRestaurant,

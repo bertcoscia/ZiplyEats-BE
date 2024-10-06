@@ -40,7 +40,9 @@ public class UsersService {
         String encodedSurname;
         encodedName = URLEncoder.encode(newUser.getName(), StandardCharsets.UTF_8);
         encodedSurname = URLEncoder.encode(newUser.getSurname(), StandardCharsets.UTF_8);
-        newUser.setAvatarUrl("https://ui-avatars.com/api/?name=" + encodedName + "+" + encodedSurname + "&background=048C7A&color=fff");
+        String defaultAvatarPrefix = "https://ui-avatars.com/api/?name=";
+        String defaultAvatarBackground = "&background=048C7A&color=fff";
+        newUser.setAvatarUrl(defaultAvatarPrefix + encodedName + "+" + encodedSurname + defaultAvatarBackground);
         return this.repository.save(newUser);
     }
 
@@ -61,19 +63,20 @@ public class UsersService {
     public User findByIdAndUpdate(UUID id, EditUsersDTO body) {
         User found = this.findById(id);
         if (this.repository.existsByEmail(body.email()) && !found.getIdUser().equals(id)) throw new BadRequestException("Email already used");
-        if (this.repository.existsByPhoneNumber(body.phoneNumber()) && !found.getIdUser().equals(id)) throw new BadRequestException("Phone number already used dufahfdsa");
+        if (this.repository.existsByPhoneNumber(body.phoneNumber()) && !found.getIdUser().equals(id)) throw new BadRequestException("Phone number already used");
         found.setName(body.name());
         found.setSurname(body.surname());
         found.setEmail(body.email());
         found.setPhoneNumber(body.phoneNumber());
         found.setAddress(body.address());
         found.setCity(body.city());
-        if (found.getAvatarUrl().contains("https://ui-avatars.com/api/?name=")) {
-            String encodedName;
-            String encodedSurname;
-            encodedName = URLEncoder.encode(body.name(), StandardCharsets.UTF_8);
-            encodedSurname = URLEncoder.encode(body.surname(), StandardCharsets.UTF_8);
-            found.setAvatarUrl("https://ui-avatars.com/api/?name=" + encodedName + "+" + encodedSurname + "&background=048C7A&color=fff");
+        String defaultAvatarPrefix = "https://ui-avatars.com/api/?name=";
+        String defaultAvatarBackground = "&background=048C7A&color=fff";
+        boolean nameOrSurnameChanged = !found.getName().equals(body.name()) || !found.getSurname().equals(body.surname());
+        if (found.getAvatarUrl().startsWith(defaultAvatarPrefix) && nameOrSurnameChanged) {
+            String encodedName = URLEncoder.encode(body.name(), StandardCharsets.UTF_8);
+            String encodedSurname = URLEncoder.encode(body.surname(), StandardCharsets.UTF_8);
+            found.setAvatarUrl(defaultAvatarPrefix + encodedName + "+" + encodedSurname + defaultAvatarBackground);
         }
         return this.repository.save(found);
     }

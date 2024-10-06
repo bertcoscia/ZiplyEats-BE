@@ -1,6 +1,5 @@
 package bertcoscia.FoodDelivery_BE.controllers;
 
-import bertcoscia.FoodDelivery_BE.entities.Restaurant;
 import bertcoscia.FoodDelivery_BE.entities.Rider;
 import bertcoscia.FoodDelivery_BE.entities.User;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;

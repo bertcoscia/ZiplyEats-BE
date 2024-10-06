@@ -7,7 +7,6 @@ import bertcoscia.FoodDelivery_BE.services.RestaurantsService;
 import bertcoscia.FoodDelivery_BE.services.RidersService;
 import bertcoscia.FoodDelivery_BE.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;

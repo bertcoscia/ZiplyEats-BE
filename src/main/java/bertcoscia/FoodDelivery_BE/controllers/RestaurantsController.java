@@ -1,9 +1,10 @@
 package bertcoscia.FoodDelivery_BE.controllers;
 
+import bertcoscia.FoodDelivery_BE.entities.Product;
 import bertcoscia.FoodDelivery_BE.entities.Restaurant;
-import bertcoscia.FoodDelivery_BE.entities.User;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.payloads.EditRestaurantsDTO;
+import bertcoscia.FoodDelivery_BE.services.ProductsService;
 import bertcoscia.FoodDelivery_BE.services.RestaurantsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,9 @@ import java.util.stream.Collectors;
 public class RestaurantsController {
     @Autowired
     RestaurantsService service;
+
+    @Autowired
+    ProductsService productsService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
@@ -84,6 +88,18 @@ public class RestaurantsController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void findByIdAndDelete(@PathVariable UUID idRestaurant) {
         this.service.findByIdAndDelete(idRestaurant);
+    }
+
+    @GetMapping("/{idRestaurant}/products")
+    public Page<Product> findAllProductsByRestaurant(
+            @PathVariable UUID idRestaurant,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam Map<String, String> params) {
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        return this.productsService.findAllByRestaurant(idRestaurant, page, size, sortBy, direction, params);
     }
 
 }
