@@ -1,6 +1,5 @@
 package bertcoscia.FoodDelivery_BE.specs;
 
-import bertcoscia.FoodDelivery_BE.entities.Rider;
 import bertcoscia.FoodDelivery_BE.entities.User;
 import org.springframework.data.jpa.domain.Specification;
 
