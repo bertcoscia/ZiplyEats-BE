@@ -21,19 +21,16 @@ public class Product {
     private String name;
     private double price;
     private String description;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "menus_products",
-            joinColumns = @JoinColumn(name = "id_product"),
-            inverseJoinColumns = @JoinColumn(name = "id_menu")
-    )
-    private List<Menu> menuList;
+    @ManyToOne
+    @JoinColumn(name = "id_restaurant")
+    private Restaurant restaurant;
     @ManyToMany(mappedBy = "productList")
     private List<Order> orderList;
 
-    public Product(String name, double price, String description) {
+    public Product(String name, double price, String description, Restaurant restaurant) {
         this.name = name;
         this.price = price;
         this.description = description;
+        this.restaurant = restaurant;
     }
 }

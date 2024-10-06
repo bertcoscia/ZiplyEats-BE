@@ -1,6 +1,7 @@
 package bertcoscia.FoodDelivery_BE.services;
 
 import bertcoscia.FoodDelivery_BE.entities.Product;
+import bertcoscia.FoodDelivery_BE.entities.Restaurant;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
 import bertcoscia.FoodDelivery_BE.payloads.NewProductsDTO;
@@ -16,9 +17,13 @@ public class ProductsService {
     @Autowired
     ProductsRepository repository;
 
-    public Product save(NewProductsDTO body) {
-        if (this.repository.existsByName(body.name())) throw new BadRequestException("There is already a product called " + body.name());
-        return this.repository.save(new Product(body.name(), body.price(), body.description()));
+    @Autowired
+    RestaurantsService restaurantsService;
+
+    public Product save(UUID idRestaurant, NewProductsDTO body) {
+        Restaurant restaurantFound = this.restaurantsService.findById(idRestaurant);
+        if (this.repository.existsByNameAndRestaurantIdRestaurant(body.name(), restaurantFound.getIdUser())) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a product called " + body.name());
+        return this.repository.save(new Product(body.name(), body.price(), body.description(), restaurantFound));
     }
 
     public Product findById(UUID id) {

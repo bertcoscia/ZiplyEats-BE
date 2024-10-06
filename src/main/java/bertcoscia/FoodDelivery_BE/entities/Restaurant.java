@@ -24,9 +24,6 @@ public class Restaurant extends User {
     @Transient
     private String surname;
     private double rating;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_menu")
-    private Menu menu;
     @ManyToOne
     @JoinColumn(name = "id_category")
     private RestaurantCategory restaurantCategory;
