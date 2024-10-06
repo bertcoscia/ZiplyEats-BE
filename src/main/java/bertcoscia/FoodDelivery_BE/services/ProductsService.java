@@ -22,7 +22,7 @@ public class ProductsService {
 
     public Product save(UUID idRestaurant, NewProductsDTO body) {
         Restaurant restaurantFound = this.restaurantsService.findById(idRestaurant);
-        if (this.repository.existsByNameAndRestaurantIdRestaurant(body.name(), restaurantFound.getIdUser())) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a product called " + body.name());
+        if (this.repository.existsByNameAndRestaurantIdUser(body.name(), restaurantFound.getIdUser())) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a product called " + body.name());
         return this.repository.save(new Product(body.name(), body.price(), body.description(), restaurantFound));
     }
 
