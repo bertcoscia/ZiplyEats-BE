@@ -1,7 +1,11 @@
 package bertcoscia.FoodDelivery_BE.controllers;
 
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
-import bertcoscia.FoodDelivery_BE.payloads.*;
+import bertcoscia.FoodDelivery_BE.payloads.login.LoginDTO;
+import bertcoscia.FoodDelivery_BE.payloads.login.LoginRespDTO;
+import bertcoscia.FoodDelivery_BE.payloads.newEntities.NewRestaurantsDTO;
+import bertcoscia.FoodDelivery_BE.payloads.newEntities.NewUsersDTO;
+import bertcoscia.FoodDelivery_BE.payloads.responses.NewEntitiesRespDTO;
 import bertcoscia.FoodDelivery_BE.services.AuthService;
 import bertcoscia.FoodDelivery_BE.services.RestaurantsService;
 import bertcoscia.FoodDelivery_BE.services.RidersService;

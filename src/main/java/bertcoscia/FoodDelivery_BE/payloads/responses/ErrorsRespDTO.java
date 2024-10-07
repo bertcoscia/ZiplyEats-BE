@@ -1,4 +1,4 @@
-package bertcoscia.FoodDelivery_BE.payloads;
+package bertcoscia.FoodDelivery_BE.payloads.responses;
 
 import java.time.LocalDateTime;
 

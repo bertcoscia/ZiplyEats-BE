@@ -1,4 +1,4 @@
-package bertcoscia.FoodDelivery_BE.payloads;
+package bertcoscia.FoodDelivery_BE.payloads.login;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

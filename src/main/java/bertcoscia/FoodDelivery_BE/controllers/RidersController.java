@@ -3,7 +3,7 @@ package bertcoscia.FoodDelivery_BE.controllers;
 import bertcoscia.FoodDelivery_BE.entities.Rider;
 import bertcoscia.FoodDelivery_BE.entities.User;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
-import bertcoscia.FoodDelivery_BE.payloads.EditUsersDTO;
+import bertcoscia.FoodDelivery_BE.payloads.edit.EditUsersDTO;
 import bertcoscia.FoodDelivery_BE.services.RidersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

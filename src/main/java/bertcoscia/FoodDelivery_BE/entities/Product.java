@@ -3,11 +3,11 @@ package bertcoscia.FoodDelivery_BE.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "products")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @NoArgsConstructor
 @Getter
 @Setter
@@ -17,20 +17,25 @@ public class Product {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     @Column(name = "id")
-    private UUID idProduct;
-    private String name;
-    private double price;
-    private String description;
+    protected UUID idProduct;
+    protected String name;
+    protected double price;
+    protected String description;
     @ManyToOne
     @JoinColumn(name = "id_restaurant")
-    private Restaurant restaurant;
-    @ManyToMany(mappedBy = "productList")
-    private List<Order> orderList;
+    protected Restaurant restaurant;
 
     public Product(String name, double price, String description, Restaurant restaurant) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.restaurant = restaurant;
+    }
+
+    public Product(String name, double price, Restaurant restaurant) {
+        this.name = name;
+        this.price = price;
+        this.restaurant = restaurant;
+        this.description = null;
     }
 }

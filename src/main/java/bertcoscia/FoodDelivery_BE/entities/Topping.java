@@ -1,9 +1,13 @@
 package bertcoscia.FoodDelivery_BE.entities;
 
-import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.UUID;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "toppings")
@@ -11,17 +15,11 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-public class Topping {
-    @Id
-    @GeneratedValue
-    @Setter(AccessLevel.NONE)
-    @Column(name = "id")
-    private UUID idTopping;
-    private String name;
-    private double price;
-
-    public Topping(String name, double price) {
-        this.name = name;
-        this.price = price;
+@JsonIgnoreProperties({"description"})
+public class Topping extends Product {
+    @Transient
+    private String description;
+    public Topping(String name, double price, Restaurant restaurant) {
+        super(name, price, restaurant);
     }
 }

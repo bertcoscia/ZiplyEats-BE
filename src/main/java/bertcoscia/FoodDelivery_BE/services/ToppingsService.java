@@ -1,9 +1,12 @@
 package bertcoscia.FoodDelivery_BE.services;
 
+import bertcoscia.FoodDelivery_BE.entities.Restaurant;
 import bertcoscia.FoodDelivery_BE.entities.Topping;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
-import bertcoscia.FoodDelivery_BE.payloads.NewToppingsDTO;
+import bertcoscia.FoodDelivery_BE.exceptions.UnauthorizedException;
+import bertcoscia.FoodDelivery_BE.payloads.edit.EditToppingsDTO;
+import bertcoscia.FoodDelivery_BE.payloads.newEntities.NewToppingsDTO;
 import bertcoscia.FoodDelivery_BE.repositories.ToppingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,9 +24,13 @@ public class ToppingsService {
     @Autowired
     ToppingsRepository repository;
 
-    public Topping save(NewToppingsDTO body) {
-        if (this.repository.existsByName(body.name())) throw new BadRequestException("There is already a topping called " + body.name());
-        return this.repository.save(new Topping(body.name(), body.price()));
+    @Autowired
+    RestaurantsService restaurantsService;
+
+    public Topping save(UUID idRestaurant, NewToppingsDTO body) {
+        Restaurant restaurantFound = this.restaurantsService.findById(idRestaurant);
+        if (this.repository.existsByNameAndRestaurantIdUser(body.name(), idRestaurant)) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a topping called " + body.name());
+        return this.repository.save(new Topping(body.name(), body.price(), restaurantFound));
     }
 
     public Topping findById(UUID id) {
@@ -35,17 +43,47 @@ public class ToppingsService {
         return this.repository.findAll(pageable);
     }
 
+    public Page<Topping> findAllMyToppings(UUID idRestaurant, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+        if (page > 15) page = 15;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return this.repository.findAllByRestaurantIdUser(idRestaurant, pageable);
+    }
+
+    public List<Topping> findAllById(List<UUID> toppingIds) {
+        return this.repository.findAllById(toppingIds);
+    }
+
     public void findByIdAndDelete(UUID id) {
         this.repository.delete(this.findById(id));
     }
 
-    public Topping findByIdAndUpdate(UUID id, Topping body) {
-        Topping found = this.findById(id);
-        if (this.repository.existsByName(body.getName()) && !found.getIdTopping().equals(body.getIdTopping())) throw new BadRequestException("There is already a topping called " + body.getName());
-        found.setName(body.getName());
-        found.setPrice(body.getPrice());
+    public Topping findByIdAndUpdate(UUID idTopping, EditToppingsDTO body) {
+        Topping found = this.findById(idTopping);
+        if (this.repository.existsByNameAndRestaurantIdUserAndIdProductNot(body.name(), found.getIdProduct(), idTopping)) throw new BadRequestException("The restaurant " + found.getRestaurant().getName() + " already has a topping called " + body.name());
+        found.setName(body.name());
+        found.setPrice(body.price());
+        return this.repository.save(found);
+    }
+
+    public Topping editMyTopping(UUID idRestaurant, UUID idTopping, EditToppingsDTO body) {
+        Topping found = this.findById(idTopping);
+        if (!found.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorized to edit this topping");
+        if (this.repository.existsByNameAndRestaurantIdUser(body.name(), idRestaurant) && !found.getRestaurant().getIdUser().equals(idRestaurant)) throw new BadRequestException("The restaurant " + found.getRestaurant().getName() + " already has a topping called " + body.name());
+        found.setName(body.name());
+        found.setPrice(body.price());
         return this.repository.save(found);
     }
 
 
+    public Page<Topping> findAllByIdRestaurant(UUID idRestaurant, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+        if (page > 15) page = 15;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return this.repository.findByRestaurantIdUser(idRestaurant, pageable);
+    }
+
+    public void deleteMyTopping(UUID idRestaurant, UUID idTopping) {
+        Topping found = this.findById(idTopping);
+        if (!found.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorized to delete this topping");
+        this.repository.delete(found);
+    }
 }

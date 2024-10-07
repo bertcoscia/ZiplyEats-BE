@@ -1,4 +1,4 @@
-package bertcoscia.FoodDelivery_BE.payloads;
+package bertcoscia.FoodDelivery_BE.payloads.newEntities;
 
 import jakarta.validation.constraints.*;
 

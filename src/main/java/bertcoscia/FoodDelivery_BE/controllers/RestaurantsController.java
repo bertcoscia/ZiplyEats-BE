@@ -3,7 +3,7 @@ package bertcoscia.FoodDelivery_BE.controllers;
 import bertcoscia.FoodDelivery_BE.entities.Product;
 import bertcoscia.FoodDelivery_BE.entities.Restaurant;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
-import bertcoscia.FoodDelivery_BE.payloads.EditRestaurantsDTO;
+import bertcoscia.FoodDelivery_BE.payloads.edit.EditRestaurantsDTO;
 import bertcoscia.FoodDelivery_BE.services.ProductsService;
 import bertcoscia.FoodDelivery_BE.services.RestaurantsService;
 import org.springframework.beans.factory.annotation.Autowired;

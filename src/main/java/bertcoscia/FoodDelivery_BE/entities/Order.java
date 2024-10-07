@@ -30,21 +30,20 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "id_order_status", nullable = false)
     private OrderStatus orderStatus;
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "orders_products",
-            joinColumns = @JoinColumn(name = "id_order"),
-            inverseJoinColumns = @JoinColumn(name = "id_product")
-    )
-    private List<Product> productList;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderProduct> orderProductList;
     @Column(name = "delivery_address")
     private String deliveryAddress;
 
-    public Order(User user, Restaurant restaurant, List<Product> productList, String deliveryAddress, OrderStatus orderStatus) {
+    public Order(User user, Restaurant restaurant, String deliveryAddress, OrderStatus orderStatus) {
         this.user = user;
         this.restaurant = restaurant;
-        this.productList = productList;
         this.deliveryAddress = deliveryAddress;
         this.orderStatus = orderStatus;
+    }
+
+    public void addOrderProduct(Product product, List<Topping> toppings) {
+        OrderProduct orderProduct = new OrderProduct(this, product, toppings);
+        this.orderProductList.add(orderProduct);
     }
 }

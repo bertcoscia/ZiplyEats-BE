@@ -3,7 +3,7 @@ package bertcoscia.FoodDelivery_BE.services;
 import bertcoscia.FoodDelivery_BE.entities.OrderStatus;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
-import bertcoscia.FoodDelivery_BE.payloads.NewOrderStatusesDTO;
+import bertcoscia.FoodDelivery_BE.payloads.newEntities.NewOrderStatusesDTO;
 import bertcoscia.FoodDelivery_BE.repositories.OrderStatusesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

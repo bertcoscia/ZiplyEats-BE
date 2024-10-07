@@ -3,7 +3,7 @@ package bertcoscia.FoodDelivery_BE.services;
 import bertcoscia.FoodDelivery_BE.entities.UserRole;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
-import bertcoscia.FoodDelivery_BE.payloads.NewUserRolesDTO;
+import bertcoscia.FoodDelivery_BE.payloads.newEntities.NewUserRolesDTO;
 import bertcoscia.FoodDelivery_BE.repositories.UserRolesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

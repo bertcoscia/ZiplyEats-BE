@@ -3,7 +3,7 @@ package bertcoscia.FoodDelivery_BE.services;
 import bertcoscia.FoodDelivery_BE.entities.RestaurantCategory;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
-import bertcoscia.FoodDelivery_BE.payloads.NewRestaurantCategoriesDTO;
+import bertcoscia.FoodDelivery_BE.payloads.newEntities.NewRestaurantCategoriesDTO;
 import bertcoscia.FoodDelivery_BE.repositories.RestaurantCategoriesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

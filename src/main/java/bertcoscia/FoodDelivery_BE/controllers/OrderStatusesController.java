@@ -2,8 +2,8 @@ package bertcoscia.FoodDelivery_BE.controllers;
 
 import bertcoscia.FoodDelivery_BE.entities.OrderStatus;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
-import bertcoscia.FoodDelivery_BE.payloads.NewEntitiesRespDTO;
-import bertcoscia.FoodDelivery_BE.payloads.NewOrderStatusesDTO;
+import bertcoscia.FoodDelivery_BE.payloads.responses.NewEntitiesRespDTO;
+import bertcoscia.FoodDelivery_BE.payloads.newEntities.NewOrderStatusesDTO;
 import bertcoscia.FoodDelivery_BE.services.OrderStatusesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

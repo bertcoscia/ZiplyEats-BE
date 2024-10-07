@@ -1,10 +1,10 @@
-package bertcoscia.FoodDelivery_BE.payloads;
+package bertcoscia.FoodDelivery_BE.payloads.edit;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-public record NewToppingsDTO(
+public record EditToppingsDTO(
         @NotEmpty(message = "Name cannot be empty")
         String name,
         @NotNull(message = "Price required")

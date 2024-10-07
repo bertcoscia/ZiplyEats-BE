@@ -1,6 +1,6 @@
 package bertcoscia.FoodDelivery_BE.exceptions;
 
-import bertcoscia.FoodDelivery_BE.payloads.ErrorsRespDTO;
+import bertcoscia.FoodDelivery_BE.payloads.responses.ErrorsRespDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;

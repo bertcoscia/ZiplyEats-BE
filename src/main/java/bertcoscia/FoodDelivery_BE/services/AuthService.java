@@ -3,7 +3,7 @@ package bertcoscia.FoodDelivery_BE.services;
 import bertcoscia.FoodDelivery_BE.entities.Restaurant;
 import bertcoscia.FoodDelivery_BE.entities.User;
 import bertcoscia.FoodDelivery_BE.exceptions.UnauthorizedException;
-import bertcoscia.FoodDelivery_BE.payloads.LoginDTO;
+import bertcoscia.FoodDelivery_BE.payloads.login.LoginDTO;
 import bertcoscia.FoodDelivery_BE.security.JWTTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
