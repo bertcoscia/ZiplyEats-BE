@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "orders_products")
+@Table(name = "order_products")
 @NoArgsConstructor
 @Setter
 @Getter
@@ -31,15 +31,18 @@ public class OrderProduct {
             inverseJoinColumns = @JoinColumn(name = "id_topping")
     )
     private List<Topping> toppings;
-
-    public OrderProduct(Order order, Product product) {
-        this.order = order;
-        this.product = product;
-    }
+    private double price;
 
     public OrderProduct(Order order, Product product, List<Topping> toppings) {
         this.order = order;
         this.product = product;
         this.toppings = toppings;
+        this.price = calculatePrice();
+    }
+
+    public double calculatePrice() {
+        double price = this.product.getPrice();
+        if (toppings != null) for (Topping topping : toppings) price += topping.getPrice();
+        return price;
     }
 }

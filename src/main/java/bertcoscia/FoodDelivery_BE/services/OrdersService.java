@@ -10,6 +10,7 @@ import bertcoscia.FoodDelivery_BE.repositories.OrdersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,15 +41,17 @@ public class OrdersService {
         User userFound = this.usersService.findById(idUser);
         Restaurant restaurantFound = this.restaurantsService.findById(body.idRestaurant());
         OrderStatus orderStatusFound = this.orderStatusesService.findByOrderStatus("CREATED");
-        Order newOrder = new Order(userFound, restaurantFound, body.deliveryAddress(), orderStatusFound);
+        Order newOrder = new Order(userFound, restaurantFound, orderStatusFound, body.deliveryAddress(), body.deliveryDateTime());
+        // Aggiunta dei prodotti all'ordine
         for (NewOrderProductsDTO orderProductDTO : body.orderProductList()) {
             Product productFound = this.productsService.findById(orderProductDTO.idProduct());
-            List<Topping> toppingList = null;
+            List<Topping> toppingList = new ArrayList<>();
             if (orderProductDTO.toppings() != null && !orderProductDTO.toppings().isEmpty()) {
                 toppingList = this.toppingsService.findAllById(orderProductDTO.toppings());
             }
-            newOrder.addOrderProduct(productFound, toppingList); //
+            newOrder.addOrderProduct(productFound, toppingList);
         }
+        newOrder.setTotalPrice(newOrder.calculateTotalPrice());
         return this.repository.save(newOrder);
     }
 
@@ -105,5 +108,9 @@ public class OrdersService {
         found.setDeliveryAddress(body.deliveryAddress());
         return this.repository.save(found);
     }
+
+    /*public Page<Order> findAllByUserId(UUID idUser) {
+
+    }*/
 
 }

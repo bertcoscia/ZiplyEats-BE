@@ -17,7 +17,7 @@ public interface ProductsRepository extends JpaRepository<Product, UUID>, JpaSpe
 
     boolean existsByNameAndRestaurantIdUser(String name, UUID idRestaurant);
 
-    Page<Product> findAllByRestaurantIdUser(UUID idRestaurant, Pageable pageable);
+    Page<Product> findAllByRestaurantIdUserAndDescriptionIsNotNull(UUID idRestaurant, Pageable pageable);
 
     boolean existsByNameAndRestaurantIdUserAndIdProductNot(String name, UUID restaurantId, UUID id);
 }
