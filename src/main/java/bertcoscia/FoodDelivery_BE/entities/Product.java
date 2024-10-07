@@ -1,5 +1,6 @@
 package bertcoscia.FoodDelivery_BE.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class Product {
     protected String description;
     @ManyToOne
     @JoinColumn(name = "id_restaurant")
+    @JsonIgnoreProperties({"email", "phoneNumber", "address", "city", "userRole", "avatarUrl", "rating", "restaurantCategory", "username"})
     protected Restaurant restaurant;
 
     public Product(String name, double price, String description, Restaurant restaurant) {

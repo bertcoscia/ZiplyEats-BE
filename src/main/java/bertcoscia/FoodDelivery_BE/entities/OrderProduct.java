@@ -1,5 +1,7 @@
 package bertcoscia.FoodDelivery_BE.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,9 +22,11 @@ public class OrderProduct {
     private UUID idOrderProduct;
     @ManyToOne
     @JoinColumn(name = "id_order", nullable = false)
+    @JsonIgnore
     private Order order;
     @ManyToOne
     @JoinColumn(name = "id_product", nullable = false)
+    @JsonIgnoreProperties({"description"})
     private Product product;
     @ManyToMany
     @JoinTable(

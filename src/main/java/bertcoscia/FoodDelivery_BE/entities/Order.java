@@ -1,5 +1,6 @@
 package bertcoscia.FoodDelivery_BE.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,12 +23,15 @@ public class Order {
     private UUID idOrder;
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
+    @JsonIgnoreProperties({"address", "userRole", "username", "avatarUrl"})
     private User user;
     @ManyToOne
     @JoinColumn(name = "id_restaurant", nullable = false)
+    @JsonIgnoreProperties({"userRole", "username", "rating", "restaurantCategory"})
     private Restaurant restaurant;
     @ManyToOne
     @JoinColumn(name = "id_rider")
+    @JsonIgnoreProperties({"address", "userRole", "username", "rating", "email", "busyWithOrder"})
     private Rider rider;
     @ManyToOne
     @JoinColumn(name = "id_order_status", nullable = false)
@@ -38,10 +42,13 @@ public class Order {
     private String deliveryAddress;
     @Column(name = "creation_date")
     private LocalDateTime creationDateTime;
-    @Column(name = "delivery_dateTime")
-    private LocalDateTime deliveryDateTime;
+    @Column(name = "requested_delivery_dateTime")
+    private LocalDateTime requestedDeliveryDateTime;
     @Column(name = "total_price")
     private double totalPrice;
+    @Column(name = "actual_delivery_DateTime")
+    private LocalDateTime actualDeliveryDateTime;
+
 
     public Order(User user, Restaurant restaurant, OrderStatus orderStatus, String deliveryAddress, LocalDateTime deliveryDateTime) {
         this.user = user;
@@ -49,7 +56,8 @@ public class Order {
         this.orderStatus = orderStatus;
         this.deliveryAddress = deliveryAddress;
         this.creationDateTime = LocalDateTime.now();
-        this.deliveryDateTime = deliveryDateTime;
+        this.requestedDeliveryDateTime = deliveryDateTime;
+        this.actualDeliveryDateTime = null;
     }
 
     public double calculateTotalPrice() {

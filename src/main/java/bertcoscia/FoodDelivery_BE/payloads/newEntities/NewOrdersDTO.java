@@ -14,7 +14,7 @@ public record NewOrdersDTO(
         List<NewOrderProductsDTO> orderProductList,
         @NotEmpty(message = "Delivery address required")
         String deliveryAddress,
-        @NotNull(message = "Delivery date time required")
-        LocalDateTime deliveryDateTime
+        @NotNull(message = "Requested delivery date time required")
+        LocalDateTime requestedDeliveryDateTime
 ) {
 }

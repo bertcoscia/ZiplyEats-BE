@@ -1,6 +1,8 @@
 package bertcoscia.FoodDelivery_BE.repositories;
 
 import bertcoscia.FoodDelivery_BE.entities.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -13,4 +15,5 @@ public interface OrdersRepository extends JpaRepository<Order, UUID>, JpaSpecifi
 
     Optional<Order> findById(UUID id);
 
+    Page<Order> findAllByUserIdUser(UUID idUser, Pageable pageable);
 }
