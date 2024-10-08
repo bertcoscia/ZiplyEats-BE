@@ -7,14 +7,19 @@ import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
 import bertcoscia.FoodDelivery_BE.exceptions.UnauthorizedException;
 import bertcoscia.FoodDelivery_BE.payloads.edit.EditProductsDTO;
 import bertcoscia.FoodDelivery_BE.payloads.newEntities.NewProductsDTO;
+import bertcoscia.FoodDelivery_BE.payloads.responses.CloudinaryRespDTO;
 import bertcoscia.FoodDelivery_BE.repositories.ProductsRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -26,6 +31,9 @@ public class ProductsService {
 
     @Autowired
     RestaurantsService restaurantsService;
+
+    @Autowired
+    Cloudinary cloudinary;
 
     public Product save(UUID idRestaurant, NewProductsDTO body) {
         Restaurant restaurantFound = this.restaurantsService.findById(idRestaurant);
@@ -84,4 +92,14 @@ public class ProductsService {
         found.setDescription(body.description());
         return this.repository.save(found);
     }
+
+    public CloudinaryRespDTO uploadProductImage(MultipartFile file, UUID idProduct, UUID idRestaurant) throws IOException {
+        Product found = this.findById(idProduct);
+        if (!found.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorised to edit this item");
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        found.setImageUrl(url);
+        this.repository.save(found);
+        return new CloudinaryRespDTO("Product image successfully uploaded");
+    }
+
 }

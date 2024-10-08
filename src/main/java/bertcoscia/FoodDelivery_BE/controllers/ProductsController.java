@@ -4,6 +4,7 @@ import bertcoscia.FoodDelivery_BE.entities.Product;
 import bertcoscia.FoodDelivery_BE.entities.Restaurant;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.payloads.edit.EditProductsDTO;
+import bertcoscia.FoodDelivery_BE.payloads.responses.CloudinaryRespDTO;
 import bertcoscia.FoodDelivery_BE.payloads.responses.NewEntitiesRespDTO;
 import bertcoscia.FoodDelivery_BE.payloads.newEntities.NewProductsDTO;
 import bertcoscia.FoodDelivery_BE.services.ProductsService;
@@ -17,7 +18,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -85,6 +88,15 @@ public class ProductsController {
         }
     }
 
+    @PostMapping("/my-products/{idProduct}")
+    @PreAuthorize("hasAuthority('RESTAURANT')")
+    public CloudinaryRespDTO uploadProductImage(
+            @RequestParam("avatar") MultipartFile image,
+            @PathVariable UUID idProduct,
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) throws IOException {
+        return this.service.uploadProductImage(image, idProduct, currentAuthenticatedRestaurant.getIdUser());
+    }
+
     @DeleteMapping("/my-products/{idProduct}")
     @PreAuthorize("hasAuthority('RESTAURANT')")
     public void deleteMyProduct(@PathVariable UUID idProduct, @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
@@ -109,4 +121,5 @@ public class ProductsController {
     public void findByIdAndDelete(@PathVariable UUID idProduct) {
         this.service.findByIdAndDelete(idProduct);
     }
+
 }

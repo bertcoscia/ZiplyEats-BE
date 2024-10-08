@@ -26,12 +26,21 @@ public class Product {
     @JoinColumn(name = "id_restaurant")
     @JsonIgnoreProperties({"email", "phoneNumber", "address", "city", "userRole", "avatarUrl", "rating", "restaurantCategory", "username"})
     protected Restaurant restaurant;
+    protected String imageUrl;
 
     public Product(String name, double price, String description, Restaurant restaurant) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.restaurant = restaurant;
+    }
+
+    public Product(String name, double price, String description, Restaurant restaurant, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.restaurant = restaurant;
+        this.imageUrl = imageUrl;
     }
 
     public Product(String name, double price, Restaurant restaurant) {

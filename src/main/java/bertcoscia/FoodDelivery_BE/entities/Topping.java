@@ -19,6 +19,9 @@ import lombok.ToString;
 public class Topping extends Product {
     @Transient
     private String description;
+    @Transient
+    private String imageUrl;
+
     public Topping(String name, double price, Restaurant restaurant) {
         super(name, price, restaurant);
     }
