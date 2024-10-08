@@ -3,6 +3,7 @@ package bertcoscia.FoodDelivery_BE.controllers;
 import bertcoscia.FoodDelivery_BE.entities.User;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.payloads.edit.EditUsersDTO;
+import bertcoscia.FoodDelivery_BE.payloads.responses.CloudinaryRespDTO;
 import bertcoscia.FoodDelivery_BE.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -83,6 +86,11 @@ public class UsersController {
         } else {
             return this.service.findByIdAndUpdate(idUser, body);
         }
+    }
+
+    @PostMapping("/me/avatar")
+    public CloudinaryRespDTO uploadImage(@RequestParam("avatar") MultipartFile image, @AuthenticationPrincipal User currentAuthenticatedUser) throws IOException {
+        return this.service.uploadImage(image, currentAuthenticatedUser.getIdUser());
     }
 
 

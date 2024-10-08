@@ -6,7 +6,10 @@ import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.exceptions.NotFoundException;
 import bertcoscia.FoodDelivery_BE.payloads.edit.EditUsersDTO;
 import bertcoscia.FoodDelivery_BE.payloads.newEntities.NewUsersDTO;
+import bertcoscia.FoodDelivery_BE.payloads.responses.CloudinaryRespDTO;
 import bertcoscia.FoodDelivery_BE.repositories.UsersRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -30,6 +35,9 @@ public class UsersService {
 
     @Autowired
     PasswordEncoder bcrypt;
+
+    @Autowired
+    Cloudinary cloudinary;
 
     public User save(NewUsersDTO body) {
         if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
@@ -83,5 +91,13 @@ public class UsersService {
 
     public User findByEmail(String email) {
         return this.repository.findByEmail(email).orElseThrow(()-> new NotFoundException("Could not find a user with email " + email));
+    }
+
+    public CloudinaryRespDTO uploadImage(MultipartFile file, UUID idUser) throws IOException {
+        User found = this.findById(idUser);
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        found.setAvatarUrl(url);
+        this.repository.save(found);
+        return new CloudinaryRespDTO("Profile image successfully uploaded");
     }
 }
