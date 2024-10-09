@@ -2,6 +2,7 @@ package bertcoscia.FoodDelivery_BE.controllers;
 
 import bertcoscia.FoodDelivery_BE.entities.Product;
 import bertcoscia.FoodDelivery_BE.entities.Restaurant;
+import bertcoscia.FoodDelivery_BE.entities.User;
 import bertcoscia.FoodDelivery_BE.exceptions.BadRequestException;
 import bertcoscia.FoodDelivery_BE.payloads.edit.EditRestaurantsDTO;
 import bertcoscia.FoodDelivery_BE.services.ProductsService;
@@ -100,6 +101,19 @@ public class RestaurantsController {
             @RequestParam Map<String, String> params) {
         Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         return this.productsService.findAllByRestaurant(idRestaurant, page, size, sortBy, direction, params);
+    }
+
+    @GetMapping("/find/{category}")
+    public Page<Restaurant> findAllRestaurantsByCategory(
+            @PathVariable String category,
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "rating") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam Map<String, String> params) {
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        return this.service.findAllByCategory(category, currentAuthenticatedUser.getCity(), page, size, sortBy, direction, params);
     }
 
 }

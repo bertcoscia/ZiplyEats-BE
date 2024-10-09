@@ -67,6 +67,12 @@ public class RestaurantsService {
         return this.repository.findAll(pageable);
     }
 
+    public Page<Restaurant> findAllByCategory(String category, String city, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+        if (page > 15) page = 15;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return this.repository.findAllByCategoryAndCity(category, city, pageable);
+    }
+
     public void findByIdAndDelete(UUID id) {
         Restaurant found = this.findById(id);
         this.repository.delete(found);
@@ -84,4 +90,5 @@ public class RestaurantsService {
         found.setPhoneNumber(body.phoneNumber());
         return this.repository.save(found);
     }
+
 }
