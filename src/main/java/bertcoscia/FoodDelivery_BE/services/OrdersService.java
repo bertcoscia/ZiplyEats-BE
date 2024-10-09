@@ -74,6 +74,7 @@ public class OrdersService {
     public Order restaurantAcceptsOrder(UUID idOrder, UUID idRestaurant) {
         Order orderFound = this.findById(idOrder);
         if (!orderFound.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorised to perform the requested action");
+        if (!orderFound.getOrderStatus().getOrderStatus().equals("CREATED")) throw new BadRequestException("It is not possible to accept this order");
         OrderStatus orderStatusFound = this.orderStatusesService.findByOrderStatus("RESTAURANT_ACCEPTED");
         orderFound.setOrderStatus(orderStatusFound);
         return this.repository.save(orderFound);
@@ -95,7 +96,8 @@ public class OrdersService {
 
     public Order assignRiderToOrder(UUID idOrder, UUID idRider) {
         Order orderFound = this.findById(idOrder);
-        if (!orderFound.getOrderStatus().getOrderStatus().equals("RESTAURANT_ACCEPTED")) throw new BadRequestException("You cannot accept this order. The restaurant has not accepted it yet");
+        if (!orderFound.getOrderStatus().getOrderStatus().equals("RESTAURANT_ACCEPTED") && !orderFound.getOrderStatus().getOrderStatus().equals("CANCELLED")) throw new BadRequestException("You cannot accept this order. The restaurant has not accepted it yet");
+        if (orderFound.getOrderStatus().getOrderStatus().equals("CANCELLED")) throw new BadRequestException("The selected order has been cancelled");
         if (orderFound.getRider() != null) throw new BadRequestException("The order n. " + orderFound.getIdOrder() + " already has a rider");
         Rider riderFound = this.ridersService.findById(idRider);
         if (riderFound.isBusyWithOrder()) throw new BadRequestException("Rider " + riderFound.getUsername() + " is currently busy with an order");
@@ -108,6 +110,7 @@ public class OrdersService {
     public Order unassignRiderToOrder(UUID idOrder, UUID idUser) {
         Order orderFound = this.findById(idOrder);
         if (!orderFound.getRider().getIdUser().equals(idUser)) throw new UnauthorizedException("You are not authorised to perform the requested action");
+        if (orderFound.getOrderStatus().getOrderStatus().equals("DELIVERED") || orderFound.getOrderStatus().getOrderStatus().equals("IN_TRANSIT")) throw new BadRequestException("It is not possible to cancel this order. Please, contact Support Centre");
         Rider riderFound = this.ridersService.findById(orderFound.getRider().getIdUser());
         orderFound.setRider(null);
         this.repository.save(orderFound);
@@ -118,7 +121,7 @@ public class OrdersService {
     public Order riderPicksUpOrder(UUID idOrder) {
     Order orderFound = this.findById(idOrder);
     if (orderFound.getRider() == null) throw new BadRequestException("The order does not have an assigned rider yet.");
-    if (!orderFound.getOrderStatus().getOrderStatus().equals("RESTAURANT_ACCEPTED")) throw new BadRequestException("There was an error. Please try again");
+    if (!orderFound.getOrderStatus().getOrderStatus().equals("RESTAURANT_ACCEPTED")) throw new BadRequestException("There was an error. Please, contact Support Centre");
     OrderStatus orderStatusFound = this.orderStatusesService.findByOrderStatus("IN_TRANSIT");
     orderFound.setOrderStatus(orderStatusFound);
     return this.repository.save(orderFound);
@@ -126,6 +129,7 @@ public class OrdersService {
 
     public Order finaliseOrder(UUID idOrder) {
         Order orderFound = this.findById(idOrder);
+        if (orderFound.getActualDeliveryDateTime() != null) throw new BadRequestException("There was an error. Please, contact Support Centre");
         OrderStatus orderStatusFound = this.orderStatusesService.findByOrderStatus("DELIVERED");
         orderFound.setOrderStatus(orderStatusFound);
         orderFound.setActualDeliveryDateTime(LocalDateTime.now());

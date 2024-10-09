@@ -15,7 +15,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-@JsonIgnoreProperties({"description"})
+@JsonIgnoreProperties({"description", "imageUrl"})
 public class Topping extends Product {
     @Transient
     private String description;
