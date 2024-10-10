@@ -122,4 +122,16 @@ public class ProductsController {
         this.service.findByIdAndDelete(idProduct);
     }
 
+    @GetMapping("/{idRestaurant}/products")
+    public Page<Product> findAllProductsByRestaurant(
+            @PathVariable UUID idRestaurant,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam Map<String, String> params) {
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        return this.service.findAllByRestaurant(idRestaurant, page, size, sortBy, direction, params);
+    }
+
 }
