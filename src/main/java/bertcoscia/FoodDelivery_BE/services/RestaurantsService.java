@@ -61,6 +61,10 @@ public class RestaurantsService {
         return this.repository.findByEmail(email).orElseThrow(()-> new NotFoundException("Could not find a restaurant with email " + email));
     }
 
+    public Restaurant findByNameAndCity(String name, String city) {
+        return this.repository.findByNameIgnoreCaseAndCityIgnoreCase(name, city).orElseThrow(()-> new NotFoundException("Could not find a restaurant called " + name));
+    }
+
     public Page<Restaurant> findAll(int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
         if (page > 100) page = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
@@ -71,6 +75,13 @@ public class RestaurantsService {
         if (page > 15) page = 15;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAllByCategoryAndCity(category, city, pageable);
+    }
+
+    public Page<Restaurant> findByNameAndCityAndSimilar(String name, String city, int page, int size, Map<String, String> params) {
+        Restaurant found = this.findByNameAndCity(name, city);
+        if (page > 15) page = 15;
+        Pageable pageable = PageRequest.of(page, size);
+        return this.repository.findByNameAndCityAndCategoryAndSimilar(name, city, found.getRestaurantCategory().getRestaurantCategory(), pageable);
     }
 
     public void findByIdAndDelete(UUID id) {

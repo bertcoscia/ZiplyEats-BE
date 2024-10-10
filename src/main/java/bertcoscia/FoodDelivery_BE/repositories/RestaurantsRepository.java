@@ -19,6 +19,13 @@ public interface RestaurantsRepository extends JpaRepository<Restaurant, UUID>, 
 
     Optional<Restaurant> findByEmail(String email);
 
+    @Query("""
+            SELECT r FROM Restaurant r
+            WHERE LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%'))
+            AND LOWER(r.city) = LOWER(:city)
+            """)
+    Optional<Restaurant> findByNameIgnoreCaseAndCityIgnoreCase(@Param("name") String name, @Param("city") String city);
+
     boolean existsByNameAndAddressAndCity(String name, String address, String city);
 
     boolean existsByEmail(String email);
@@ -27,4 +34,12 @@ public interface RestaurantsRepository extends JpaRepository<Restaurant, UUID>, 
 
     @Query("SELECT r FROM Restaurant r WHERE LOWER(r.restaurantCategory.restaurantCategory) = LOWER(:category) AND r.city = :city")
     Page<Restaurant> findAllByCategoryAndCity(@Param("category") String category, @Param("city") String city, Pageable pageable);
+
+    @Query("""
+    SELECT r FROM Restaurant r
+    WHERE r.restaurantCategory.restaurantCategory = :category
+    AND r.city = :city
+    ORDER BY CASE WHEN LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%')) THEN 0 ELSE 1 END
+    """)
+    Page<Restaurant> findByNameAndCityAndCategoryAndSimilar(@Param("name") String name, @Param("city") String city, @Param("category") String category, Pageable pageable);
 }

@@ -103,7 +103,7 @@ public class RestaurantsController {
         return this.productsService.findAllByRestaurant(idRestaurant, page, size, sortBy, direction, params);
     }
 
-    @GetMapping("/find/{category}")
+    @GetMapping("/find-category/{category}")
     public Page<Restaurant> findAllRestaurantsByCategory(
             @PathVariable String category,
             @AuthenticationPrincipal User currentAuthenticatedUser,
@@ -114,6 +114,16 @@ public class RestaurantsController {
             @RequestParam Map<String, String> params) {
         Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         return this.service.findAllByCategory(category, currentAuthenticatedUser.getCity(), page, size, sortBy, direction, params);
+    }
+
+    @GetMapping("/find-name/{nameRestaurant}")
+    public Page<Restaurant> findByNameAndCityAndSimilar(
+            @PathVariable String nameRestaurant,
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam Map<String, String> params) {
+        return this.service.findByNameAndCityAndSimilar(nameRestaurant, currentAuthenticatedUser.getCity(), page, size, params);
     }
 
 }
