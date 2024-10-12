@@ -24,6 +24,10 @@ public record NewRestaurantsDTO(
         String phoneNumber,
         @Size(min = 36, max = 36, message = "Restaurant id must be 36 characters long")
         String idCategory,
-        String restaurantCategory
+        String restaurantCategory,
+        @NotNull(message = "Latitude required")
+        double latitude,
+        @NotNull(message = "Longitude required")
+        double longitude
 ) {
 }

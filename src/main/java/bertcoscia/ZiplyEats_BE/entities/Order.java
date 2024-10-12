@@ -66,7 +66,6 @@ public class Order {
         return totalPrice;
     }
 
-
     public void addOrderProduct(Product product, List<Topping> toppings) {
         OrderProduct orderProduct = new OrderProduct(this, product, toppings);
         this.orderProductList.add(orderProduct);

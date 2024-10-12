@@ -40,8 +40,12 @@ public class User implements UserDetails {
     private UserRole userRole;
     @Column(name = "url_avatar")
     private String avatarUrl;
+    @Column(name = "latitude")
+    private double latitude;
+    @Column(name = "longitude")
+    private double longitude;
 
-    public User(String name, String surname, String email, String password, String phoneNumber, String address, String city, UserRole userRole) {
+    public User(String name, String surname, String email, String password, String phoneNumber, String address, String city, UserRole userRole, double latitude, double longitude) {
         this.name = name;
         this.surname = surname;
         this.email = email;
@@ -50,9 +54,11 @@ public class User implements UserDetails {
         this.address = address;
         this.city = city;
         this.userRole = userRole;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public User(String name, String email, String password, String phoneNumber, String address, String city, UserRole userRole) {
+    public User(String name, String email, String password, String phoneNumber, String address, String city, UserRole userRole, double latitude, double longitude) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -60,6 +66,8 @@ public class User implements UserDetails {
         this.address = address;
         this.city = city;
         this.userRole = userRole;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     @Override

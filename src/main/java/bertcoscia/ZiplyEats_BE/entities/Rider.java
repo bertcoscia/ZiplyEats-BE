@@ -19,8 +19,8 @@ public class Rider extends User {
     private double rating;
     private boolean isBusyWithOrder;
 
-    public Rider(String name, String surname, String email, String password, String phoneNumber, String address, String city, UserRole userRole) {
-        super(name, surname, email, password, phoneNumber, address, city, userRole);
+    public Rider(String name, String surname, String email, String password, String phoneNumber, String address, String city, UserRole userRole, double latitude, double longitude) {
+        super(name, surname, email, password, phoneNumber, address, city, userRole, latitude, longitude);
         this.rating = 0;
         isBusyWithOrder = false;
     }

@@ -43,7 +43,7 @@ public class UsersService {
         if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         UserRole userRole = this.userRolesService.findByUserRole("USER");
-        User newUser = new User(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRole);
+        User newUser = new User(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRole, body.latitude(), body.longitude());
         String encodedName;
         String encodedSurname;
         encodedName = URLEncoder.encode(newUser.getName(), StandardCharsets.UTF_8);

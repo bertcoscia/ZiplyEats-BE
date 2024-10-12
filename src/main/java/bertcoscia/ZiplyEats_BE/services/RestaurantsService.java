@@ -46,7 +46,7 @@ public class RestaurantsService {
             restaurantCategory = this.restaurantsCategoriesService.findById(UUID.fromString(body.idCategory()));
         }
         UserRole userRoleFound = this.userRolesService.findByUserRole("RESTAURANT");
-        Restaurant newRestaurant = new Restaurant(body.name(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRoleFound, restaurantCategory);
+        Restaurant newRestaurant = new Restaurant(body.name(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRoleFound, restaurantCategory, body.latitude(), body.longitude());
         String encodedName;
         encodedName = URLEncoder.encode(newRestaurant.getName(), StandardCharsets.UTF_8);
         newRestaurant.setAvatarUrl("https://ui-avatars.com/api/?name=" + encodedName + "&background=048C7A&color=fff");

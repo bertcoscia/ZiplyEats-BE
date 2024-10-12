@@ -20,8 +20,8 @@ public class Restaurant extends User {
     @JoinColumn(name = "id_category")
     private RestaurantCategory restaurantCategory;
 
-    public Restaurant(String name, String email, String password, String phoneNumber, String address, String city, UserRole userRole, RestaurantCategory restaurantCategory) {
-        super(name, email, password, phoneNumber, address, city, userRole);
+    public Restaurant(String name, String email, String password, String phoneNumber, String address, String city, UserRole userRole, RestaurantCategory restaurantCategory, double latitude, double longitude) {
+        super(name, email, password, phoneNumber, address, city, userRole, latitude, longitude);
         this.restaurantCategory = restaurantCategory;
     }
 
