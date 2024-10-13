@@ -107,7 +107,7 @@ public class RidersService {
     public Rider editMyPhoneNumber(UUID idUser, EditUsersPhoneNumberDTO body) {
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         Rider found = this.findById(idUser);
-        found.setEmail(body.phoneNumber());
+        found.setPhoneNumber(body.phoneNumber());
         return this.repository.save(found);
     }
 

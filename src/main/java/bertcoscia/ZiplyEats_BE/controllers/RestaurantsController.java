@@ -4,10 +4,7 @@ import bertcoscia.ZiplyEats_BE.entities.Restaurant;
 import bertcoscia.ZiplyEats_BE.entities.User;
 import bertcoscia.ZiplyEats_BE.exceptions.BadRequestException;
 import bertcoscia.ZiplyEats_BE.payloads.edit.EditRestaurantsDTO;
-import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersEmailDTO;
-import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersNameAndSurnameDTO;
-import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersPasswordDTO;
-import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersPhoneNumberDTO;
+import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.*;
 import bertcoscia.ZiplyEats_BE.payloads.responses.EditUsersPasswordRespDTO;
 import bertcoscia.ZiplyEats_BE.services.ProductsService;
 import bertcoscia.ZiplyEats_BE.services.RestaurantsService;
@@ -122,7 +119,7 @@ public class RestaurantsController {
     @PreAuthorize("hasAuthority('RESTAURANT')")
     public Restaurant editMyName(
             @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
-            @RequestBody @Validated EditUsersNameAndSurnameDTO body,
+            @RequestBody @Validated EditRestaurantsNameDTO body,
             BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
