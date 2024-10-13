@@ -49,7 +49,7 @@ public class UsersService {
         encodedName = URLEncoder.encode(newUser.getName(), StandardCharsets.UTF_8);
         encodedSurname = URLEncoder.encode(newUser.getSurname(), StandardCharsets.UTF_8);
         String defaultAvatarPrefix = "https://ui-avatars.com/api/?name=";
-        String defaultAvatarBackground = "&background=048C7A&color=fff";
+        String defaultAvatarBackground = "&background=f86825&color=f2f2f2&size=512";
         newUser.setAvatarUrl(defaultAvatarPrefix + encodedName + "+" + encodedSurname + defaultAvatarBackground);
         return this.repository.save(newUser);
     }

@@ -39,7 +39,7 @@ public class RidersService {
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         UserRole userRole = this.userRolesService.findByUserRole("RIDER");
         Rider newRider = new Rider(body.name(), body.surname(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRole, body.latitude(), body.longitude());
-        newRider.setAvatarUrl("https://ui-avatars.com/api/?name=" + newRider.getName() + "+" + newRider.getSurname() + "&background=048C7A&color=fff");
+        newRider.setAvatarUrl("https://ui-avatars.com/api/?name=" + newRider.getName() + "+" + newRider.getSurname() + "&background=f86825&color=f2f2f2&size=512");
         return this.repository.save(newRider);
     }
 

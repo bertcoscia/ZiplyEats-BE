@@ -49,7 +49,7 @@ public class RestaurantsService {
         Restaurant newRestaurant = new Restaurant(body.name(), body.email(), bcrypt.encode(body.password()), body.phoneNumber(), body.address(), body.city(), userRoleFound, restaurantCategory, body.latitude(), body.longitude());
         String encodedName;
         encodedName = URLEncoder.encode(newRestaurant.getName(), StandardCharsets.UTF_8);
-        newRestaurant.setAvatarUrl("https://ui-avatars.com/api/?name=" + encodedName + "&background=048C7A&color=fff");
+        newRestaurant.setAvatarUrl("https://ui-avatars.com/api/?name=" + encodedName + "&background=f86825&color=f2f2f2&size=512");
         return this.repository.save(newRestaurant);
     }
 

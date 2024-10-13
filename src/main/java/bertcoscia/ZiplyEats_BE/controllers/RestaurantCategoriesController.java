@@ -15,6 +15,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,6 +49,11 @@ public class RestaurantCategoriesController {
         Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         String sortBy = "restaurantCategory";
         return this.service.findAll(page, size, sortBy, direction, params);
+    }
+
+    @GetMapping("/list")
+    public List<RestaurantCategory> findAllList() {
+        return this.service.findAllList();
     }
 
     @GetMapping("/id/{idRestaurantCategory}")

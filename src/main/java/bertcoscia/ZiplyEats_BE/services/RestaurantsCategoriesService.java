@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -48,5 +49,9 @@ public class RestaurantsCategoriesService {
         if (this.repository.existsByRestaurantCategory(body.getRestaurantCategory()) && !found.getIdCategory().equals(body.getIdCategory())) throw new BadRequestException("Category " + body.getRestaurantCategory() + " already existing");
         found.setRestaurantCategory(body.getRestaurantCategory());
         return this.repository.save(found);
+    }
+
+    public List<RestaurantCategory> findAllList() {
+        return this.repository.findAll();
     }
 }
