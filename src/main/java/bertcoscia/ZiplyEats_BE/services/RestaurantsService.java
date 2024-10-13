@@ -5,8 +5,14 @@ import bertcoscia.ZiplyEats_BE.entities.RestaurantCategory;
 import bertcoscia.ZiplyEats_BE.entities.UserRole;
 import bertcoscia.ZiplyEats_BE.exceptions.BadRequestException;
 import bertcoscia.ZiplyEats_BE.exceptions.NotFoundException;
+import bertcoscia.ZiplyEats_BE.exceptions.UnauthorizedException;
 import bertcoscia.ZiplyEats_BE.payloads.edit.EditRestaurantsDTO;
+import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersEmailDTO;
+import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersNameAndSurnameDTO;
+import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersPasswordDTO;
+import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersPhoneNumberDTO;
 import bertcoscia.ZiplyEats_BE.payloads.newEntities.NewRestaurantsDTO;
+import bertcoscia.ZiplyEats_BE.payloads.responses.EditUsersPasswordRespDTO;
 import bertcoscia.ZiplyEats_BE.repositories.RestaurantsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -100,6 +106,39 @@ public class RestaurantsService {
         found.setEmail(body.email());
         found.setPhoneNumber(body.phoneNumber());
         return this.repository.save(found);
+    }
+
+    public Restaurant editMyName(UUID idUser, EditUsersNameAndSurnameDTO body) {
+        Restaurant found = this.findById(idUser);
+        if (this.repository.existsByNameAndAddressAndCity(body.name(), found.getAddress(), found.getCity())) throw new BadRequestException("There is already a restaurant called " + body.name() + " in " + found.getCity() + " at the address " + found.getAddress());
+        found.setName(body.name());
+        return this.repository.save(found);
+    }
+
+    public Restaurant editMyEmail(UUID idUser, EditUsersEmailDTO body) {
+        if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
+        Restaurant found = this.findById(idUser);
+        found.setEmail(body.email());
+        return this.repository.save(found);
+    }
+
+    public Restaurant editMyPhoneNumber(UUID idUser, EditUsersPhoneNumberDTO body) {
+        if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
+        Restaurant found = this.findById(idUser);
+        found.setEmail(body.phoneNumber());
+        return this.repository.save(found);
+    }
+
+    public EditUsersPasswordRespDTO editMyPassword(UUID idUser, EditUsersPasswordDTO body) {
+        if (!body.isDifferentPasswords()) throw new BadRequestException("New password cannot be the same as the current password");
+        Restaurant found = this.findById(idUser);
+        if (bcrypt.matches(body.currentPassword(), found.getPassword())) {
+            found.setPassword(bcrypt.encode(body.newPassword()));
+            this.repository.save(found);
+            return new EditUsersPasswordRespDTO("Password successfully changed");
+        } else {
+            throw new UnauthorizedException("Wrong password");
+        }
     }
 
 }

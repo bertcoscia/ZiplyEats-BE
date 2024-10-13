@@ -3,7 +3,8 @@ package bertcoscia.ZiplyEats_BE.controllers;
 import bertcoscia.ZiplyEats_BE.entities.Rider;
 import bertcoscia.ZiplyEats_BE.entities.User;
 import bertcoscia.ZiplyEats_BE.exceptions.BadRequestException;
-import bertcoscia.ZiplyEats_BE.payloads.edit.EditUsersDTO;
+import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.*;
+import bertcoscia.ZiplyEats_BE.payloads.responses.EditUsersPasswordRespDTO;
 import bertcoscia.ZiplyEats_BE.services.RidersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,11 +45,13 @@ public class RidersController {
     }
 
     @GetMapping("/me")
+    @PreAuthorize("hasAuthority('RIDER')")
     public Rider getMyProfile(@AuthenticationPrincipal Rider currentAuthenticatedRider) {
         return this.service.findById(currentAuthenticatedRider.getIdUser());
     }
 
     @PutMapping("/me")
+    @PreAuthorize("hasAuthority('RIDER')")
     public Rider updateMyProfile(@AuthenticationPrincipal Rider currentAuthenticatedRider, @RequestBody @Validated EditUsersDTO body, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
@@ -61,6 +64,7 @@ public class RidersController {
     }
 
     @DeleteMapping("/me")
+    @PreAuthorize("hasAuthority('RIDER')")
     public void deleteMyProfile(@AuthenticationPrincipal Rider currentAuthenticatedRider) {
         this.service.findById(currentAuthenticatedRider.getIdUser());
     }
@@ -81,6 +85,70 @@ public class RidersController {
             throw new BadRequestException(messages);
         } else {
             return this.service.findByIdAndUpdate(idRider, body);
+        }
+    }
+
+    @PatchMapping("/me/edit-name+surname")
+    @PreAuthorize("hasAuthority('RIDER')")
+    public Rider editMyNameAndSurname(
+            @AuthenticationPrincipal Rider currentAuthenticatedRider,
+            @RequestBody @Validated EditUsersNameAndSurnameDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyNameAndSurname(currentAuthenticatedRider.getIdUser(), body);
+        }
+    }
+
+    @PatchMapping("/me/edit-email")
+    @PreAuthorize("hasAuthority('RIDER')")
+    public Rider editMyEmail(
+            @AuthenticationPrincipal Rider currentAuthenticatedRider,
+            @RequestBody @Validated EditUsersEmailDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyEmail(currentAuthenticatedRider.getIdUser(), body);
+        }
+    }
+
+    @PatchMapping("/me/edit-phoneNumber")
+    @PreAuthorize("hasAuthority('RIDER')")
+    public Rider editMyPhoneNumber(
+            @AuthenticationPrincipal Rider currentAuthenticatedRider,
+            @RequestBody @Validated EditUsersPhoneNumberDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyPhoneNumber(currentAuthenticatedRider.getIdUser(), body);
+        }
+    }
+
+    @PatchMapping("/me/edit-password")
+    @PreAuthorize("hasAuthority('RIDER')")
+    public EditUsersPasswordRespDTO editMyPassword(
+            @AuthenticationPrincipal Rider currentAuthenticatedRider,
+            @RequestBody @Validated EditUsersPasswordDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyPassword(currentAuthenticatedRider.getIdUser(), body);
         }
     }
 

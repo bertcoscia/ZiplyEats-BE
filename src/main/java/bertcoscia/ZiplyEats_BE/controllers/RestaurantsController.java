@@ -4,6 +4,11 @@ import bertcoscia.ZiplyEats_BE.entities.Restaurant;
 import bertcoscia.ZiplyEats_BE.entities.User;
 import bertcoscia.ZiplyEats_BE.exceptions.BadRequestException;
 import bertcoscia.ZiplyEats_BE.payloads.edit.EditRestaurantsDTO;
+import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersEmailDTO;
+import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersNameAndSurnameDTO;
+import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersPasswordDTO;
+import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.EditUsersPhoneNumberDTO;
+import bertcoscia.ZiplyEats_BE.payloads.responses.EditUsersPasswordRespDTO;
 import bertcoscia.ZiplyEats_BE.services.ProductsService;
 import bertcoscia.ZiplyEats_BE.services.RestaurantsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +116,70 @@ public class RestaurantsController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam Map<String, String> params) {
         return this.service.findByNameAndCityAndSimilar(nameRestaurant, currentAuthenticatedUser.getCity(), page, size, params);
+    }
+
+    @PatchMapping("/my-restaurant/edit-name")
+    @PreAuthorize("hasAuthority('RESTAURANT')")
+    public Restaurant editMyName(
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
+            @RequestBody @Validated EditUsersNameAndSurnameDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyName(currentAuthenticatedRestaurant.getIdUser(), body);
+        }
+    }
+
+    @PatchMapping("/my-restaurant/edit-email")
+    @PreAuthorize("hasAuthority('RESTAURANT')")
+    public Restaurant editMyEmail(
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
+            @RequestBody @Validated EditUsersEmailDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyEmail(currentAuthenticatedRestaurant.getIdUser(), body);
+        }
+    }
+
+    @PatchMapping("/my-restaurant/edit-phoneNumber")
+    @PreAuthorize("hasAuthority('RESTAURANT')")
+    public Restaurant editMyPhoneNumber(
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
+            @RequestBody @Validated EditUsersPhoneNumberDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyPhoneNumber(currentAuthenticatedRestaurant.getIdUser(), body);
+        }
+    }
+
+    @PatchMapping("/my-restaurant/edit-password")
+    @PreAuthorize("hasAuthority('RESTAURANT')")
+    public EditUsersPasswordRespDTO editMyPassword(
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
+            @RequestBody @Validated EditUsersPasswordDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyPassword(currentAuthenticatedRestaurant.getIdUser(), body);
+        }
     }
 
 }

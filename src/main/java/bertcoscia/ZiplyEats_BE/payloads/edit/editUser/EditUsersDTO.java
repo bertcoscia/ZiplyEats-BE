@@ -1,4 +1,4 @@
-package bertcoscia.ZiplyEats_BE.payloads.edit;
+package bertcoscia.ZiplyEats_BE.payloads.edit.editUser;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

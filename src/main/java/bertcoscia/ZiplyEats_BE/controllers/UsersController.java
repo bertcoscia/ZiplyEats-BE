@@ -2,8 +2,9 @@ package bertcoscia.ZiplyEats_BE.controllers;
 
 import bertcoscia.ZiplyEats_BE.entities.User;
 import bertcoscia.ZiplyEats_BE.exceptions.BadRequestException;
-import bertcoscia.ZiplyEats_BE.payloads.edit.EditUsersDTO;
+import bertcoscia.ZiplyEats_BE.payloads.edit.editUser.*;
 import bertcoscia.ZiplyEats_BE.payloads.responses.CloudinaryRespDTO;
+import bertcoscia.ZiplyEats_BE.payloads.responses.EditUsersPasswordRespDTO;
 import bertcoscia.ZiplyEats_BE.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -91,6 +92,70 @@ public class UsersController {
     @PostMapping("/me/avatar")
     public CloudinaryRespDTO uploadImage(@RequestParam("avatar") MultipartFile image, @AuthenticationPrincipal User currentAuthenticatedUser) throws IOException {
         return this.service.uploadImage(image, currentAuthenticatedUser.getIdUser());
+    }
+
+    @PatchMapping("/me/edit-name+surname")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    public User editMyNameAndSurname(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestBody @Validated EditUsersNameAndSurnameDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyNameAndSurname(currentAuthenticatedUser.getIdUser(), body);
+        }
+    }
+
+    @PatchMapping("/me/edit-email")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    public User editMyEmail(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestBody @Validated EditUsersEmailDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyEmail(currentAuthenticatedUser.getIdUser(), body);
+        }
+    }
+
+    @PatchMapping("/me/edit-phoneNumber")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    public User editMyPhoneNumber(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestBody @Validated EditUsersPhoneNumberDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyPhoneNumber(currentAuthenticatedUser.getIdUser(), body);
+        }
+    }
+
+    @PatchMapping("/me/edit-password")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    public EditUsersPasswordRespDTO editMyPassword(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestBody @Validated EditUsersPasswordDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyPassword(currentAuthenticatedUser.getIdUser(), body);
+        }
     }
 
 
