@@ -121,9 +121,9 @@ public class OrdersController {
         this.service.findByIdAndDelete(idOrder);
     }
 
-    @GetMapping("/my-orders")
+    @GetMapping("/my-orders/user")
     @PreAuthorize("hasAuthority('USER')")
-    public Page<Order> findAllMyOrders(
+    public Page<Order> findAllMyOrdersUser(
             @AuthenticationPrincipal User currentAuthenticatedUser,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -132,5 +132,18 @@ public class OrdersController {
             @RequestParam Map<String, String> params) {
         Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
         return this.service.findAllByUserId(currentAuthenticatedUser.getIdUser(), page, size, sortBy, direction, params);
+    }
+
+    @GetMapping("/my-orders/restaurant")
+    @PreAuthorize("hasAuthority('RESTAURANT')")
+    public Page<Order> findAllMyOrdersRestaurant(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "creationDateTime") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDirection,
+            @RequestParam Map<String, String> params) {
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        return this.service.findAllByRestaurantId(currentAuthenticatedUser.getIdUser(), page, size, sortBy, direction, params);
     }
 }

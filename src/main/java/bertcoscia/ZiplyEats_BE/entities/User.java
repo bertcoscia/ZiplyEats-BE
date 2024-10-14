@@ -40,9 +40,9 @@ public class User implements UserDetails {
     private UserRole userRole;
     @Column(name = "url_avatar")
     private String avatarUrl;
-    @Column(name = "latitude")
+    @Column(name = "latitude", nullable = false)
     private double latitude;
-    @Column(name = "longitude")
+    @Column(name = "longitude", nullable = false)
     private double longitude;
 
     public User(String name, String surname, String email, String password, String phoneNumber, String address, String city, UserRole userRole, double latitude, double longitude) {

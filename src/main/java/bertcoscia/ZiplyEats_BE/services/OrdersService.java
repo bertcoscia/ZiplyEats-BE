@@ -151,6 +151,12 @@ public class OrdersService {
         return this.repository.findAllByUserIdUser(idUser, pageable);
     }
 
+    public Page<Order> findAllByRestaurantId(UUID idUser, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+        if (page > 20) page = 20;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return this.repository.findAllByRestaurantIdUser(idUser, pageable);
+    }
+
     public Order findMyOrderById(UUID idOrder, UUID idUser) {
         Order found = this.findById(idOrder);
         if (!found.getUser().getIdUser().equals(idUser)) throw new UnauthorizedException("You are not authorised to see this order");
