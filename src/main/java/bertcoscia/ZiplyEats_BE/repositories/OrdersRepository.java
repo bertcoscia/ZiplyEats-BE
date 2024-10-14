@@ -17,5 +17,5 @@ public interface OrdersRepository extends JpaRepository<Order, UUID>, JpaSpecifi
 
     Page<Order> findAllByUserIdUser(UUID idUser, Pageable pageable);
 
-    Page<Order> findAllByRestaurantIdUser(UUID idUser, Pageable pageable);
+    Page<Order> findAllByRestaurantIdUserAndActualDeliveryDateTimeNotNull(UUID idUser, Pageable pageable);
 }

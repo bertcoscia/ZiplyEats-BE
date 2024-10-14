@@ -136,7 +136,7 @@ public class OrdersController {
 
     @GetMapping("/my-orders/restaurant")
     @PreAuthorize("hasAuthority('RESTAURANT')")
-    public Page<Order> findAllMyOrdersRestaurant(
+    public Page<Order> findAllMyPastOrdersRestaurant(
             @AuthenticationPrincipal User currentAuthenticatedUser,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -144,6 +144,6 @@ public class OrdersController {
             @RequestParam(defaultValue = "desc") String sortDirection,
             @RequestParam Map<String, String> params) {
         Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return this.service.findAllByRestaurantId(currentAuthenticatedUser.getIdUser(), page, size, sortBy, direction, params);
+        return this.service.findAllByRestaurantIdUserAndActualDeliveryDateTimeNotNull(currentAuthenticatedUser.getIdUser(), page, size, sortBy, direction, params);
     }
 }
