@@ -154,7 +154,7 @@ public class OrdersService {
     public Page<Order> findAllByRestaurantIdUserAndActualDeliveryDateTimeNotNull(UUID idUser, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
         if (page > 20) page = 20;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        return this.repository.findAllByRestaurantIdUserAndActualDeliveryDateTimeNotNull(idUser, pageable);
+        return this.repository.findAllPastOrdersByRestaurant(idUser, pageable);
     }
 
     public Order findMyOrderById(UUID idOrder, UUID idUser) {
@@ -163,4 +163,7 @@ public class OrdersService {
         return found;
     }
 
+    public List<Order> findAllActiveOrdersByRestaurant(UUID idUser) {
+        return this.repository.findAllActiveOrdersByRestaurant(idUser);
+    }
 }

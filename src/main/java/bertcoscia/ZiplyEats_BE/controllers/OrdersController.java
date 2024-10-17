@@ -22,6 +22,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -134,16 +135,22 @@ public class OrdersController {
         return this.service.findAllByUserId(currentAuthenticatedUser.getIdUser(), page, size, sortBy, direction, params);
     }
 
-    @GetMapping("/my-orders/restaurant")
+    @GetMapping("/my-orders/restaurant/past-orders")
     @PreAuthorize("hasAuthority('RESTAURANT')")
     public Page<Order> findAllMyPastOrdersRestaurant(
-            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(defaultValue = "creationDateTime") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDirection,
             @RequestParam Map<String, String> params) {
         Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return this.service.findAllByRestaurantIdUserAndActualDeliveryDateTimeNotNull(currentAuthenticatedUser.getIdUser(), page, size, sortBy, direction, params);
+        return this.service.findAllByRestaurantIdUserAndActualDeliveryDateTimeNotNull(currentAuthenticatedRestaurant.getIdUser(), page, size, sortBy, direction, params);
+    }
+
+    @GetMapping("/my-orders/restaurant/active")
+    @PreAuthorize("hasAuthority('RESTAURANT')")
+    public List<Order> findAllMyActiveOrdersRestaurant(@AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
+        return this.service.findAllActiveOrdersByRestaurant(currentAuthenticatedRestaurant.getIdUser());
     }
 }

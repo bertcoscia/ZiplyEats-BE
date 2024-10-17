@@ -179,4 +179,20 @@ public class RestaurantsController {
         }
     }
 
+    @PatchMapping("/my-restaurant/edit-address")
+    @PreAuthorize("hasAuthority('RESTAURANT')")
+    public Restaurant editMyAddress(
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
+            @RequestBody @Validated EditUsersAdressDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyAddress(currentAuthenticatedRestaurant.getIdUser(), body);
+        }
+    }
+
 }

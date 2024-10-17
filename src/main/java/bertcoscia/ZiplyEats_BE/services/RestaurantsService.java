@@ -138,4 +138,13 @@ public class RestaurantsService {
         }
     }
 
+    public Restaurant editMyAddress(UUID idUser, EditUsersAdressDTO body) {
+        Restaurant found = this.findById(idUser);
+        if (this.repository.existsByNameAndAddressAndCity(found.getName(), body.address(), body.city())) throw new BadRequestException("There is already a restaurant called " + found.getName() + " in " + body.city() + " at the address " + body.address());
+        found.setAddress(body.address());
+        found.setCity(body.city());
+        found.setLatitude(body.latitude());
+        found.setLongitude(body.longitude());
+        return this.repository.save(found);
+    }
 }
