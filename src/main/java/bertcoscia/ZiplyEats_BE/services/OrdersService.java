@@ -45,6 +45,7 @@ public class OrdersService {
     ToppingsService toppingsService;
 
     public Order save(UUID idUser, NewOrdersDTO body) {
+        if (body.requestedDeliveryDateTime().isBefore(LocalDateTime.now().plusMinutes(25))) throw new BadRequestException("Requested delivery time not valid. Please try again");
         User userFound = this.usersService.findById(idUser);
         Restaurant restaurantFound = this.restaurantsService.findById(body.idRestaurant());
         OrderStatus orderStatusFound = this.orderStatusesService.findByOrderStatus("CREATED");
@@ -151,10 +152,11 @@ public class OrdersService {
         return this.repository.findAllByUserIdUser(idUser, pageable);
     }
 
-    public Page<Order> findAllByRestaurantIdUserAndActualDeliveryDateTimeNotNull(UUID idUser, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public Page<Order> findAllPastOrdersByRestaurant(UUID idUser, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+        Restaurant restaurantFound = this.restaurantsService.findById(idUser);
         if (page > 20) page = 20;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        return this.repository.findAllPastOrdersByRestaurant(idUser, pageable);
+        return this.repository.findAllPastOrdersByRestaurant(restaurantFound.getIdUser(), pageable);
     }
 
     public Order findMyOrderById(UUID idOrder, UUID idUser) {
@@ -165,5 +167,23 @@ public class OrdersService {
 
     public List<Order> findAllActiveOrdersByRestaurant(UUID idUser) {
         return this.repository.findAllActiveOrdersByRestaurant(idUser);
+    }
+
+    public Order findRiderCurrentActiveOrder(UUID idUser) {
+        Rider riderFound = this.ridersService.findById(idUser);
+        if (!riderFound.isBusyWithOrder()) throw new BadRequestException("The rider is not currently assigned to an order");
+        return this.repository.findRiderCurrentActiveOrder(riderFound.getIdUser());
+    }
+
+    public Page<Order> findAvailableOrders(String city, int page, int size, String sortBy, Sort.Direction direction) {
+        if (page > 10) page = 10;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return this.repository.findAvailableOrders(city, pageable);
+    }
+
+    public Page<Order> findAllPastOrdersByRider(UUID idUser, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+        if (page > 20) page = 20;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return this.repository.findAllPastOrdersByRider(idUser, pageable);
     }
 }

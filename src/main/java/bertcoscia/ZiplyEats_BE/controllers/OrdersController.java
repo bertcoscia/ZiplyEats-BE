@@ -145,12 +145,42 @@ public class OrdersController {
             @RequestParam(defaultValue = "desc") String sortDirection,
             @RequestParam Map<String, String> params) {
         Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return this.service.findAllByRestaurantIdUserAndActualDeliveryDateTimeNotNull(currentAuthenticatedRestaurant.getIdUser(), page, size, sortBy, direction, params);
+        return this.service.findAllPastOrdersByRestaurant(currentAuthenticatedRestaurant.getIdUser(), page, size, sortBy, direction, params);
+    }
+
+    @GetMapping("/my-orders/rider/past-orders")
+    @PreAuthorize("hasAuthority('RIDER')")
+    public Page<Order> findAllMyPastOrdersRider(
+            @AuthenticationPrincipal Rider currentAuthenticatedRider,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "creationDateTime") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDirection,
+            @RequestParam Map<String, String> params) {
+        Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        return this.service.findAllPastOrdersByRider(currentAuthenticatedRider.getIdUser(), page, size, sortBy, direction, params);
     }
 
     @GetMapping("/my-orders/restaurant/active")
     @PreAuthorize("hasAuthority('RESTAURANT')")
     public List<Order> findAllMyActiveOrdersRestaurant(@AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
         return this.service.findAllActiveOrdersByRestaurant(currentAuthenticatedRestaurant.getIdUser());
+    }
+
+    @GetMapping("/rider/active-order")
+    @PreAuthorize("hasAuthority('RIDER')")
+    public Order findRiderCurrentActiveOrder(@AuthenticationPrincipal Rider currentAuthenticatedRider) {
+        return this.service.findRiderCurrentActiveOrder(currentAuthenticatedRider.getIdUser());
+    }
+
+    @GetMapping("/rider/available-orders")
+    @PreAuthorize("hasAuthority('RIDER')")
+    public Page<Order> findAvailableOrders(
+            @AuthenticationPrincipal Rider currentAuthenticatedRider,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
+        String sortBy = "creationDateTime";
+        Sort.Direction direction = Sort.Direction.ASC;
+        return this.service.findAvailableOrders(currentAuthenticatedRider.getCity(), page, size, sortBy, direction);
     }
 }
