@@ -87,6 +87,12 @@ public class RestaurantsService {
         return this.repository.findByNameAndCityAndCategoryAndSimilar(name, city, found.getRestaurantCategory().getRestaurantCategory(), pageable);
     }
 
+    public Page<Restaurant> findAllByCity(String city, int page, int size, String sortBy, Sort.Direction direction) {
+        if (page > 15) page = 15;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
+        return this.repository.findAllByCity(city, pageable);
+    }
+
     public void findByIdAndDelete(UUID id) {
         Restaurant found = this.findById(id);
         this.repository.delete(found);

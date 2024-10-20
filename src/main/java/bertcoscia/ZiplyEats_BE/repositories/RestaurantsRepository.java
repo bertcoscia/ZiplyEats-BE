@@ -42,4 +42,7 @@ public interface RestaurantsRepository extends JpaRepository<Restaurant, UUID>, 
     ORDER BY CASE WHEN LOWER(r.name) LIKE LOWER(CONCAT('%', :name, '%')) THEN 0 ELSE 1 END
     """)
     Page<Restaurant> findByNameAndCityAndCategoryAndSimilar(@Param("name") String name, @Param("city") String city, @Param("category") String category, Pageable pageable);
+
+    @Query("SELECT r FROM Restaurant r WHERE r.city = :city")
+    Page<Restaurant> findAllByCity(@Param("city") String city, Pageable pageable);
 }

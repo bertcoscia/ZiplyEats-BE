@@ -115,6 +115,16 @@ public class RestaurantsController {
         return this.service.findByNameAndCityAndSimilar(nameRestaurant, currentAuthenticatedUser.getCity(), page, size, params);
     }
 
+    @GetMapping("/find-city")
+    public Page<Restaurant> findAllByCity(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "30") int size) {
+        String sortBy = "rating";
+        Sort.Direction direction = Sort.Direction.DESC;
+        return this.service.findAllByCity(currentAuthenticatedUser.getCity(), page, size, sortBy, direction);
+    }
+
     @PatchMapping("/my-restaurant/edit-name")
     @PreAuthorize("hasAuthority('RESTAURANT')")
     public Restaurant editMyName(
