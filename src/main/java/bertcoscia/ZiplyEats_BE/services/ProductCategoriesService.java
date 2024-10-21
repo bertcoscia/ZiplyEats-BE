@@ -29,7 +29,7 @@ public class ProductCategoriesService {
     }
 
     public List<ProductCategory> findAllByRestaurant (UUID idRestaurant) {
-        return this.repository.findAllByRestaurantIdUser(idRestaurant);
+        return this.repository.findAllByRestaurantIdUserOrderByProductCategoryAsc(idRestaurant);
     }
 
     public ProductCategory findById(UUID id) {
@@ -41,7 +41,7 @@ public class ProductCategoriesService {
     }
 
     public ProductCategory editMyProductCategory(UUID idRestaurant, UUID idProductCategory, EditProductCategoriesDTO body) {
-        ProductCategory found = this.findById(idRestaurant);
+        ProductCategory found = this.findById(idProductCategory);
         if (!found.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorized to edit this product category.");
         if (this.repository.existsByProductCategoryAndRestaurantIdUser(body.productCategory(), idRestaurant) && !found.getIdProductCategory().equals(idProductCategory)) throw new BadRequestException("The restaurant already has a product called " + body.productCategory());
         found.setProductCategory(body.productCategory());

@@ -17,5 +17,5 @@ public interface ProductCategoriesRepository extends JpaRepository<ProductCatego
 
     boolean existsByProductCategoryAndRestaurantIdUser(String restaurantCategory, UUID idRestaurant);
 
-    List<ProductCategory> findAllByRestaurantIdUser(UUID idRestaurant);
+    List<ProductCategory> findAllByRestaurantIdUserOrderByProductCategoryAsc(UUID idRestaurant);
 }
