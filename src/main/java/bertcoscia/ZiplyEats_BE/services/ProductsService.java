@@ -1,6 +1,7 @@
 package bertcoscia.ZiplyEats_BE.services;
 
 import bertcoscia.ZiplyEats_BE.entities.Product;
+import bertcoscia.ZiplyEats_BE.entities.ProductCategory;
 import bertcoscia.ZiplyEats_BE.entities.Restaurant;
 import bertcoscia.ZiplyEats_BE.exceptions.BadRequestException;
 import bertcoscia.ZiplyEats_BE.exceptions.NotFoundException;
@@ -33,12 +34,16 @@ public class ProductsService {
     RestaurantsService restaurantsService;
 
     @Autowired
+    ProductCategoriesService productCategoriesService;
+
+    @Autowired
     Cloudinary cloudinary;
 
     public Product save(UUID idRestaurant, NewProductsDTO body) {
         Restaurant restaurantFound = this.restaurantsService.findById(idRestaurant);
+        ProductCategory productCategoryFound = this.productCategoriesService.findByRestaurantAndProductCategory(idRestaurant, body.productCategory());
         if (this.repository.existsByNameAndRestaurantIdUser(body.name(), restaurantFound.getIdUser())) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a product called " + body.name());
-        return this.repository.save(new Product(body.name(), body.price(), body.description(), restaurantFound));
+        return this.repository.save(new Product(body.name(), body.price(), body.description(), restaurantFound, productCategoryFound));
     }
 
     public Product findById(UUID id) {
@@ -63,13 +68,15 @@ public class ProductsService {
     }
 
     public Product editMyProduct(UUID idRestaurant, UUID idProduct, EditProductsDTO body) {
-        Product found = this.findById(idProduct);
-        if (!found.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorized to edit this product.");
-        if (this.repository.existsByNameAndRestaurantIdUser(body.name(), idRestaurant) && !found.getIdProduct().equals(idProduct)) throw new BadRequestException("The restaurant already has a product called " + body.name());
-        found.setName(body.name());
-        found.setPrice(body.price());
-        found.setDescription(body.description());
-        return this.repository.save(found);
+        Product productFound = this.findById(idProduct);
+        if (!productFound.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorized to edit this product.");
+        if (this.repository.existsByNameAndRestaurantIdUser(body.name(), idRestaurant) && !productFound.getIdProduct().equals(idProduct)) throw new BadRequestException("The restaurant already has a product called " + body.name());
+        ProductCategory productCategoryFound = this.productCategoriesService.findByRestaurantAndProductCategory(idRestaurant, body.productCategory());
+        productFound.setName(body.name());
+        productFound.setPrice(body.price());
+        productFound.setDescription(body.description());
+        productFound.setProductCategory(productCategoryFound);
+        return this.repository.save(productFound);
     }
 
     public void findByIdAndDelete(UUID id) {

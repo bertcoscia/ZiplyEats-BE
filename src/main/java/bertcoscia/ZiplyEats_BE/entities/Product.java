@@ -27,20 +27,25 @@ public class Product {
     @JsonIgnoreProperties({"email", "phoneNumber", "address", "city", "userRole", "avatarUrl", "rating", "restaurantCategory", "username"})
     protected Restaurant restaurant;
     protected String imageUrl;
+    @ManyToOne
+    @JoinColumn(name = "id_category")
+    private ProductCategory productCategory;
 
-    public Product(String name, double price, String description, Restaurant restaurant) {
+    public Product(String name, double price, String description, Restaurant restaurant, ProductCategory productCategory) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.restaurant = restaurant;
+        this.productCategory = productCategory;
     }
 
-    public Product(String name, double price, String description, Restaurant restaurant, String imageUrl) {
+    public Product(String name, double price, String description, Restaurant restaurant, String imageUrl, ProductCategory productCategory) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.restaurant = restaurant;
         this.imageUrl = imageUrl;
+        this.productCategory = productCategory;
     }
 
     public Product(String name, double price, Restaurant restaurant) {

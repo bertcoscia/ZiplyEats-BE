@@ -11,6 +11,8 @@ public record EditProductsDTO(
             @DecimalMin(value = "0.01", message = "Price must be bigger than 0.00")
         double price,
         @NotEmpty(message = "Description cannot be empty")
-        String description
+        String description,
+        @NotEmpty(message = "Product category cannot be empty")
+        String productCategory
 ) {
 }

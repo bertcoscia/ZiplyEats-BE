@@ -9,6 +9,8 @@ public record NewProductsDTO (
         @NotNull(message = "Price required")
         double price,
         @NotEmpty(message = "Description cannot be empty")
-        String description
+        String description,
+        @NotEmpty(message = "Product category cannot be empty")
+        String productCategory
 ) {
 }

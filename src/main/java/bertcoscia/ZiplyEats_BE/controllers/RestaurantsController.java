@@ -97,7 +97,7 @@ public class RestaurantsController {
             @PathVariable String category,
             @AuthenticationPrincipal User currentAuthenticatedUser,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "50") int size,
             @RequestParam(defaultValue = "rating") String sortBy,
             @RequestParam(defaultValue = "asc") String sortDirection,
             @RequestParam Map<String, String> params) {
@@ -119,7 +119,7 @@ public class RestaurantsController {
     public Page<Restaurant> findAllByCity(
             @AuthenticationPrincipal User currentAuthenticatedUser,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "30") int size) {
+            @RequestParam(defaultValue = "50") int size) {
         String sortBy = "rating";
         Sort.Direction direction = Sort.Direction.DESC;
         return this.service.findAllByCity(currentAuthenticatedUser.getCity(), page, size, sortBy, direction);
