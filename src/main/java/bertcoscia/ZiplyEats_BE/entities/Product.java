@@ -30,22 +30,26 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "id_category")
     private ProductCategory productCategory;
+    @Column(name = "can_have_toppings")
+    private boolean canHaveToppings = false;
 
-    public Product(String name, double price, String description, Restaurant restaurant, ProductCategory productCategory) {
+    public Product(String name, double price, String description, Restaurant restaurant, ProductCategory productCategory, boolean canHaveToppings) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.restaurant = restaurant;
         this.productCategory = productCategory;
+        this.canHaveToppings = canHaveToppings;
     }
 
-    public Product(String name, double price, String description, Restaurant restaurant, String imageUrl, ProductCategory productCategory) {
+    public Product(String name, double price, String description, Restaurant restaurant, String imageUrl, ProductCategory productCategory, boolean canHaveToppings) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.restaurant = restaurant;
         this.imageUrl = imageUrl;
         this.productCategory = productCategory;
+        this.canHaveToppings = canHaveToppings;
     }
 
     public Product(String name, double price, Restaurant restaurant) {

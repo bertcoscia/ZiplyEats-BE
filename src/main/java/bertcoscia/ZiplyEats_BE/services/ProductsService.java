@@ -43,7 +43,7 @@ public class ProductsService {
         Restaurant restaurantFound = this.restaurantsService.findById(idRestaurant);
         ProductCategory productCategoryFound = this.productCategoriesService.findByRestaurantAndProductCategory(idRestaurant, body.productCategory());
         if (this.repository.existsByNameAndRestaurantIdUser(body.name(), restaurantFound.getIdUser())) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a product called " + body.name());
-        return this.repository.save(new Product(body.name(), body.price(), body.description(), restaurantFound, productCategoryFound));
+        return this.repository.save(new Product(body.name(), body.price(), body.description(), restaurantFound, productCategoryFound, body.canHaveToppings()));
     }
 
     public Product findById(UUID id) {
@@ -76,6 +76,7 @@ public class ProductsService {
         productFound.setPrice(body.price());
         productFound.setDescription(body.description());
         productFound.setProductCategory(productCategoryFound);
+        productFound.setCanHaveToppings(body.canHaveToppings());
         return this.repository.save(productFound);
     }
 
@@ -97,6 +98,7 @@ public class ProductsService {
         found.setPrice(body.price());
         found.setName(body.name());
         found.setDescription(body.description());
+        found.setCanHaveToppings(body.canHaveToppings());
         return this.repository.save(found);
     }
 
