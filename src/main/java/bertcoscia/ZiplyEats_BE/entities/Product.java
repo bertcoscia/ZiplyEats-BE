@@ -52,10 +52,11 @@ public class Product {
         this.canHaveToppings = canHaveToppings;
     }
 
-    public Product(String name, double price, Restaurant restaurant) {
+    public Product(String name, double price, Restaurant restaurant, ProductCategory productCategory) {
         this.name = name;
         this.price = price;
         this.restaurant = restaurant;
         this.description = null;
+        this.canHaveToppings = false;
     }
 }

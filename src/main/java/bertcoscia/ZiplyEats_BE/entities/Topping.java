@@ -22,7 +22,9 @@ public class Topping extends Product {
     @Transient
     private String imageUrl;
 
-    public Topping(String name, double price, Restaurant restaurant) {
-        super(name, price, restaurant);
+    public Topping(String name, double price, Restaurant restaurant, ProductCategory productCategory) {
+        super(name, price, restaurant, productCategory);
     }
+
+
 }

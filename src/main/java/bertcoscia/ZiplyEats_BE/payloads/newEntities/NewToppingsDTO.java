@@ -9,6 +9,8 @@ public record NewToppingsDTO(
         String name,
         @NotNull(message = "Price required")
             @DecimalMin(value = "0.01", message = "Price must be bigger than 0.00")
-        double price
+        double price,
+        @NotEmpty(message = "Product category cannot be empty")
+        String productCategory
 ) {
 }

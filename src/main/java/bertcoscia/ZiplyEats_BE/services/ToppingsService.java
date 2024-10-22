@@ -1,5 +1,6 @@
 package bertcoscia.ZiplyEats_BE.services;
 
+import bertcoscia.ZiplyEats_BE.entities.ProductCategory;
 import bertcoscia.ZiplyEats_BE.entities.Restaurant;
 import bertcoscia.ZiplyEats_BE.entities.Topping;
 import bertcoscia.ZiplyEats_BE.exceptions.BadRequestException;
@@ -25,12 +26,16 @@ public class ToppingsService {
     ToppingsRepository repository;
 
     @Autowired
+    ProductCategoriesService productCategoriesService;
+
+    @Autowired
     RestaurantsService restaurantsService;
 
     public Topping save(UUID idRestaurant, NewToppingsDTO body) {
         Restaurant restaurantFound = this.restaurantsService.findById(idRestaurant);
         if (this.repository.existsByNameAndRestaurantIdUser(body.name(), idRestaurant)) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a topping called " + body.name());
-        return this.repository.save(new Topping(body.name(), body.price(), restaurantFound));
+        ProductCategory productCategoryFound = this.productCategoriesService.findByRestaurantAndProductCategory(restaurantFound.getIdUser(), body.productCategory());
+        return this.repository.save(new Topping(body.name(), body.price(), restaurantFound, productCategoryFound));
     }
 
     public Topping findById(UUID id) {
@@ -75,7 +80,7 @@ public class ToppingsService {
     }
 
 
-    public Page<Topping> findAllByIdRestaurant(UUID idRestaurant, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public List<Topping> findAllByIdRestaurant(UUID idRestaurant, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
         if (page > 15) page = 15;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findByRestaurantIdUser(idRestaurant, pageable);

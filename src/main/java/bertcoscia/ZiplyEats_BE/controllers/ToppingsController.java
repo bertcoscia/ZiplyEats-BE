@@ -17,6 +17,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class ToppingsController {
     }
 
     @GetMapping("/{idRestaurant}")
-    public Page<Topping> findAllToppingsByIdRestaurant(
+    public List<Topping> findAllToppingsByIdRestaurant(
             @PathVariable UUID idRestaurant,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
