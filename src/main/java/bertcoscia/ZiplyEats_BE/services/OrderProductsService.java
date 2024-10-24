@@ -56,4 +56,7 @@ public class OrderProductsService {
         this.repository.delete(this.findById(id));
     }
 
+    public void saveAll(List<OrderProduct> orderProducts) {
+        this.repository.saveAll(orderProducts);
+    }
 }

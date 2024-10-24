@@ -21,7 +21,7 @@ public class OrderProduct {
     @Column(name = "id")
     private UUID idOrderProduct;
     @ManyToOne
-    @JoinColumn(name = "id_order", nullable = false)
+    @JoinColumn(name = "id_order")
     @JsonIgnore
     private Order order;
     @ManyToOne
@@ -39,6 +39,12 @@ public class OrderProduct {
 
     public OrderProduct(Order order, Product product, List<Topping> toppings) {
         this.order = order;
+        this.product = product;
+        this.toppings = toppings;
+        this.price = calculatePrice();
+    }
+
+    public OrderProduct(Product product, List<Topping> toppings) {
         this.product = product;
         this.toppings = toppings;
         this.price = calculatePrice();

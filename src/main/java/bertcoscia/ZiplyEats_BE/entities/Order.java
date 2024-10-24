@@ -66,8 +66,18 @@ public class Order {
         return totalPrice;
     }
 
+    public double calculateTotalPriceStripe() {
+        double totalPrice = 0;
+        for (OrderProduct orderProduct : orderProductList) totalPrice += orderProduct.getPrice();
+        return totalPrice * 100;
+    }
+
     public void addOrderProduct(Product product, List<Topping> toppings) {
         OrderProduct orderProduct = new OrderProduct(this, product, toppings);
         this.orderProductList.add(orderProduct);
+    }
+
+    public List<OrderProduct> getOrderProducts() {
+        return this.orderProductList;
     }
 }
