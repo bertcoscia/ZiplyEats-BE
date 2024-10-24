@@ -115,14 +115,14 @@ public class RestaurantsController {
         return this.service.findByNameAndCityAndSimilar(nameRestaurant, currentAuthenticatedUser.getCity(), page, size, params);
     }
 
-    @GetMapping("/find-city")
+    @GetMapping("/find-city/{city}")
     public Page<Restaurant> findAllByCity(
-            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @PathVariable String city,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "50") int size) {
         String sortBy = "rating";
         Sort.Direction direction = Sort.Direction.DESC;
-        return this.service.findAllByCity(currentAuthenticatedUser.getCity(), page, size, sortBy, direction);
+        return this.service.findAllByCity(city, page, size, sortBy, direction);
     }
 
     @PatchMapping("/my-restaurant/edit-name")
