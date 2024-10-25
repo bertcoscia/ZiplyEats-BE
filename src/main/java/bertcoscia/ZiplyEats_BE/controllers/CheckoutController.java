@@ -83,7 +83,7 @@ public class CheckoutController {
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setSuccessUrl(frontendUrl + "/success/" + idOrder)
-                .setCancelUrl("https://tuo-sito.com/cancel") //TODO: CANCEL PAGE
+                .setCancelUrl(frontendUrl + "/cancel/" + idOrder)
                 .addAllLineItem(stripeLineItems)
                 .build();
 

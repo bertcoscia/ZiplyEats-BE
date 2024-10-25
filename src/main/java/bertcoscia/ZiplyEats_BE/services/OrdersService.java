@@ -45,7 +45,7 @@ public class OrdersService {
     ToppingsService toppingsService;
 
     public Order save(UUID idUser, NewOrdersDTO body) {
-        if (body.requestedDeliveryDateTime().isBefore(LocalDateTime.now().plusMinutes(25))) throw new BadRequestException("Requested delivery time not valid. Please try again");
+        if (body.requestedDeliveryDateTime().isBefore(LocalDateTime.now().plusMinutes(30))) throw new BadRequestException("Requested delivery time not valid. Please try again");
         User userFound = this.usersService.findById(idUser);
         Restaurant restaurantFound = this.restaurantsService.findById(body.idRestaurant());
         OrderStatus orderStatusFound = this.orderStatusesService.findByOrderStatus("CREATED");
@@ -185,5 +185,12 @@ public class OrdersService {
         if (page > 20) page = 20;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAllPastOrdersByRider(idUser, pageable);
+    }
+
+    public void userCancelOrder(UUID idUser, UUID idOrder) {
+        Order orderFound = this.findById(idOrder);
+        if (!orderFound.getUser().getIdUser().equals(idUser)) throw new UnauthorizedException("You do not have the authorisation to cancel this order");
+        if (!orderFound.getOrderStatus().getOrderStatus().equals("CREATED")) throw new BadRequestException("You no longer can cancel this order");
+        this.findByIdAndDelete(idOrder);
     }
 }

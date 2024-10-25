@@ -116,6 +116,14 @@ public class OrdersController {
         return this.service.finaliseOrder(idOrder);
     }
 
+    @PatchMapping("/{idOrder}/user-cancel-order")
+    @PreAuthorize("hasAuthority('USER')")
+    public void userCancelOrder(
+            @PathVariable UUID idOrder,
+            @AuthenticationPrincipal User currentAuthenticatedUser) {
+        this.service.userCancelOrder(currentAuthenticatedUser.getIdUser(), idOrder);
+    }
+
     @DeleteMapping("/{idOrder}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public void findByIdAndDelete(@PathVariable UUID idOrder) {
