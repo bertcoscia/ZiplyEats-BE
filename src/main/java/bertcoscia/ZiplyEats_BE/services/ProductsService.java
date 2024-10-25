@@ -39,7 +39,9 @@ public class ProductsService {
     @Autowired
     Cloudinary cloudinary;
 
-    public Product save(UUID idRestaurant, NewProductsDTO body) {
+    public Product save(
+            UUID idRestaurant,
+            NewProductsDTO body) {
         Restaurant restaurantFound = this.restaurantsService.findById(idRestaurant);
         ProductCategory productCategoryFound = this.productCategoriesService.findByRestaurantAndProductCategory(idRestaurant, body.productCategory());
         if (this.repository.existsByNameAndRestaurantIdUser(body.name(), restaurantFound.getIdUser())) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a product called " + body.name());
@@ -59,13 +61,21 @@ public class ProductsService {
         return this.repository.findAllByRestaurantIdUserAndDescriptionIsNotNull(idRestaurant);
     }
 
-    public Page<Product> findAll(int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public Page<Product> findAll(
+            int page,
+            int size,
+            String sortBy,
+            Sort.Direction direction,
+            Map<String, String> params) {
         if (page > 100) page = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAll(pageable);
     }
 
-    public Product editMyProduct(UUID idRestaurant, UUID idProduct, EditProductsDTO body) {
+    public Product editMyProduct(
+            UUID idRestaurant,
+            UUID idProduct,
+            EditProductsDTO body) {
         Product productFound = this.findById(idProduct);
         if (!productFound.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorized to edit this product.");
         if (this.repository.existsByNameAndRestaurantIdUser(body.name(), idRestaurant) && !productFound.getIdProduct().equals(idProduct)) throw new BadRequestException("The restaurant already has a product called " + body.name());
@@ -82,13 +92,17 @@ public class ProductsService {
         this.repository.delete(this.findById(id));
     }
 
-    public void deleteMyProduct(UUID idProduct, UUID idRestaurant) {
+    public void deleteMyProduct(
+            UUID idProduct,
+            UUID idRestaurant) {
         Product found = this.findById(idProduct);
         if (!found.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorized to delete this product.");
         this.repository.delete(found);
     }
 
-    public Product findByIdAndUpdate(UUID idProduct, EditProductsDTO body) {
+    public Product findByIdAndUpdate(
+            UUID idProduct,
+            EditProductsDTO body) {
         Product found = this.findById(idProduct);
         if (this.repository.existsByNameAndRestaurantIdUserAndIdProductNot(body.name(), found.getRestaurant().getIdUser(), idProduct)) {
             throw new BadRequestException("The restaurant " + found.getRestaurant().getName() + " already has a product called " + body.name());
@@ -100,7 +114,10 @@ public class ProductsService {
         return this.repository.save(found);
     }
 
-    public CloudinaryRespDTO uploadProductImage(MultipartFile file, UUID idProduct, UUID idRestaurant) throws IOException {
+    public CloudinaryRespDTO uploadProductImage(
+            MultipartFile file,
+            UUID idProduct,
+            UUID idRestaurant) throws IOException {
         Product found = this.findById(idProduct);
         if (!found.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorised to edit this item");
         String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");

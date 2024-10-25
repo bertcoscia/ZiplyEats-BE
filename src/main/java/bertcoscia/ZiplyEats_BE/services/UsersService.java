@@ -60,7 +60,12 @@ public class UsersService {
         return this.repository.findById(id).orElseThrow(()-> new NotFoundException(id));
     }
 
-    public Page<User> findAll(int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public Page<User> findAll(
+            int page,
+            int size,
+            String sortBy,
+            Sort.Direction direction,
+            Map<String, String> params) {
         if (page > 100) page = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAll(pageable);
@@ -70,7 +75,9 @@ public class UsersService {
         this.repository.delete(this.findById(id));
     }
 
-    public User findByIdAndUpdate(UUID id, EditUsersDTO body) {
+    public User findByIdAndUpdate(
+            UUID id,
+            EditUsersDTO body) {
         User found = this.findById(id);
         if (this.repository.existsByEmail(body.email()) && !found.getIdUser().equals(id)) throw new BadRequestException("Email already used");
         if (this.repository.existsByPhoneNumber(body.phoneNumber()) && !found.getIdUser().equals(id)) throw new BadRequestException("Phone number already used");
@@ -95,7 +102,9 @@ public class UsersService {
         return this.repository.findByEmail(email).orElseThrow(()-> new NotFoundException("Could not find a user with email " + email));
     }
 
-    public CloudinaryRespDTO uploadImage(MultipartFile file, UUID idUser) throws IOException {
+    public CloudinaryRespDTO uploadImage(
+            MultipartFile file,
+            UUID idUser) throws IOException {
         User found = this.findById(idUser);
         String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         found.setAvatarUrl(url);
@@ -103,28 +112,36 @@ public class UsersService {
         return new CloudinaryRespDTO("Profile image successfully uploaded");
     }
 
-    public User editMyNameAndSurname(UUID idUser, EditUsersNameAndSurnameDTO body) {
+    public User editMyNameAndSurname(
+            UUID idUser,
+            EditUsersNameAndSurnameDTO body) {
         User found = this.findById(idUser);
         found.setName(body.name());
         found.setSurname(body.surname());
         return this.repository.save(found);
     }
 
-    public User editMyEmail(UUID idUser, EditUsersEmailDTO body) {
+    public User editMyEmail(
+            UUID idUser,
+            EditUsersEmailDTO body) {
         if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
         User found = this.findById(idUser);
         found.setEmail(body.email());
         return this.repository.save(found);
     }
 
-    public User editMyPhoneNumber(UUID idUser, EditUsersPhoneNumberDTO body) {
+    public User editMyPhoneNumber(
+            UUID idUser,
+            EditUsersPhoneNumberDTO body) {
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         User found = this.findById(idUser);
         found.setPhoneNumber(body.phoneNumber());
         return this.repository.save(found);
     }
 
-    public EditUsersPasswordRespDTO editMyPassword(UUID idUser, EditUsersPasswordDTO body) {
+    public EditUsersPasswordRespDTO editMyPassword(
+            UUID idUser,
+            EditUsersPasswordDTO body) {
         if (!body.isDifferentPasswords()) throw new BadRequestException("New password cannot be the same as the current password");
         User found = this.findById(idUser);
         if (bcrypt.matches(body.currentPassword(), found.getPassword())) {
@@ -136,7 +153,9 @@ public class UsersService {
         }
     }
 
-    public User editMyAddress(UUID idUser, EditUsersAdressDTO body) {
+    public User editMyAddress(
+            UUID idUser,
+            EditUsersAdressDTO body) {
         User found = this.findById(idUser);
         found.setAddress(body.address());
         found.setCity(body.city());

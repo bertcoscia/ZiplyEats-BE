@@ -49,7 +49,12 @@ public class RidersService {
         return this.repository.findRiderByIdUser(id).orElseThrow(()-> new NotFoundException(id));
     }
 
-    public Page<User> findAll(int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public Page<User> findAll(
+            int page,
+            int size,
+            String sortBy,
+            Sort.Direction direction,
+            Map<String, String> params) {
         if (page > 100) page = 100;
         Specification<User> spec = UsersSpec.isRider("rider");
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
@@ -60,7 +65,9 @@ public class RidersService {
         this.repository.delete(this.findById(id));
     }
 
-    public Rider findByIdAndUpdate(UUID id, EditUsersDTO body) {
+    public Rider findByIdAndUpdate(
+            UUID id,
+            EditUsersDTO body) {
         Rider found = this.findById(id);
         if (this.repository.existsByPhoneNumber(body.phoneNumber()) && !found.getIdUser().equals(id)) throw new BadRequestException("Phone number already used");
         if (this.repository.existsByEmail(body.email()) && !found.getIdUser().equals(id)) throw new BadRequestException("Email already used");
@@ -90,28 +97,36 @@ public class RidersService {
         this.repository.save(rider);
     }
 
-    public Rider editMyNameAndSurname(UUID idUser, EditUsersNameAndSurnameDTO body) {
+    public Rider editMyNameAndSurname(
+            UUID idUser,
+            EditUsersNameAndSurnameDTO body) {
         Rider found = this.findById(idUser);
         found.setName(body.name());
         found.setSurname(body.surname());
         return this.repository.save(found);
     }
 
-    public Rider editMyEmail(UUID idUser, EditUsersEmailDTO body) {
+    public Rider editMyEmail(
+            UUID idUser,
+            EditUsersEmailDTO body) {
         if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
         Rider found = this.findById(idUser);
         found.setEmail(body.email());
         return this.repository.save(found);
     }
 
-    public Rider editMyPhoneNumber(UUID idUser, EditUsersPhoneNumberDTO body) {
+    public Rider editMyPhoneNumber(
+            UUID idUser,
+            EditUsersPhoneNumberDTO body) {
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         Rider found = this.findById(idUser);
         found.setPhoneNumber(body.phoneNumber());
         return this.repository.save(found);
     }
 
-    public EditUsersPasswordRespDTO editMyPassword(UUID idUser, EditUsersPasswordDTO body) {
+    public EditUsersPasswordRespDTO editMyPassword(
+            UUID idUser,
+            EditUsersPasswordDTO body) {
         if (!body.isDifferentPasswords()) throw new BadRequestException("New password cannot be the same as the current password");
         Rider found = this.findById(idUser);
         if (bcrypt.matches(body.currentPassword(), found.getPassword())) {
@@ -123,7 +138,9 @@ public class RidersService {
         }
     }
 
-    public Rider editMyAddress(UUID idUser, EditUsersAdressDTO body) {
+    public Rider editMyAddress(
+            UUID idUser,
+            EditUsersAdressDTO body) {
         Rider found = this.findById(idUser);
         found.setAddress(body.address());
         found.setCity(body.city());

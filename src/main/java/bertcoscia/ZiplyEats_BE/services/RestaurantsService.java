@@ -64,30 +64,54 @@ public class RestaurantsService {
         return this.repository.findByEmail(email).orElseThrow(()-> new NotFoundException("Could not find a restaurant with email " + email));
     }
 
-    public Restaurant findByNameAndCity(String name, String city) {
+    public Restaurant findByNameAndCity(
+            String name,
+            String city) {
         return this.repository.findByNameIgnoreCaseAndCityIgnoreCase(name, city).orElseThrow(()-> new NotFoundException("Could not find a restaurant called " + name));
     }
 
-    public Page<Restaurant> findAll(int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public Page<Restaurant> findAll(
+            int page,
+            int size,
+            String sortBy,
+            Sort.Direction direction,
+            Map<String, String> params) {
         if (page > 100) page = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAll(pageable);
     }
 
-    public Page<Restaurant> findAllByCategory(String category, String city, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public Page<Restaurant> findAllByCategory(
+            String category,
+            String city,
+            int page,
+            int size,
+            String sortBy,
+            Sort.Direction direction,
+            Map<String, String> params) {
         if (page > 15) page = 15;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAllByCategoryAndCity(category, city, pageable);
     }
 
-    public Page<Restaurant> findByNameAndCityAndSimilar(String name, String city, int page, int size, Map<String, String> params) {
+    public Page<Restaurant> findByNameAndCityAndSimilar(
+            String name,
+            String city,
+            int page,
+            int size,
+            Map<String, String> params) {
         Restaurant found = this.findByNameAndCity(name, city);
         if (page > 15) page = 15;
         Pageable pageable = PageRequest.of(page, size);
         return this.repository.findByNameAndCityAndCategoryAndSimilar(name, city, found.getRestaurantCategory().getRestaurantCategory(), pageable);
     }
 
-    public Page<Restaurant> findAllByCity(String city, int page, int size, String sortBy, Sort.Direction direction) {
+    public Page<Restaurant> findAllByCity(
+            String city,
+            int page,
+            int size,
+            String sortBy,
+            Sort.Direction direction) {
         if (page > 15) page = 15;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAllByCity(city, pageable);
@@ -98,7 +122,9 @@ public class RestaurantsService {
         this.repository.delete(found);
     }
 
-    public Restaurant findByIdAndUpdate(UUID id, EditRestaurantsDTO body) {
+    public Restaurant findByIdAndUpdate(
+            UUID id,
+            EditRestaurantsDTO body) {
         Restaurant found = this.findById(id);
         if (this.repository.existsByEmail(body.email()) && !found.getIdUser().equals(id)) throw new BadRequestException("Email already used");
         if (this.repository.existsByPhoneNumber(body.phoneNumber()) && !found.getIdUser().equals(id)) throw new BadRequestException("Phone number already used");
@@ -111,28 +137,36 @@ public class RestaurantsService {
         return this.repository.save(found);
     }
 
-    public Restaurant editMyName(UUID idUser, EditRestaurantsNameDTO body) {
+    public Restaurant editMyName(
+            UUID idUser,
+            EditRestaurantsNameDTO body) {
         Restaurant found = this.findById(idUser);
         if (this.repository.existsByNameAndAddressAndCity(body.name(), found.getAddress(), found.getCity())) throw new BadRequestException("There is already a restaurant called " + body.name() + " in " + found.getCity() + " at the address " + found.getAddress());
         found.setName(body.name());
         return this.repository.save(found);
     }
 
-    public Restaurant editMyEmail(UUID idUser, EditUsersEmailDTO body) {
+    public Restaurant editMyEmail(
+            UUID idUser,
+            EditUsersEmailDTO body) {
         if (this.repository.existsByEmail(body.email())) throw new BadRequestException("Email already used");
         Restaurant found = this.findById(idUser);
         found.setEmail(body.email());
         return this.repository.save(found);
     }
 
-    public Restaurant editMyPhoneNumber(UUID idUser, EditUsersPhoneNumberDTO body) {
+    public Restaurant editMyPhoneNumber(
+            UUID idUser,
+            EditUsersPhoneNumberDTO body) {
         if (this.repository.existsByPhoneNumber(body.phoneNumber())) throw new BadRequestException("Phone number already used");
         Restaurant found = this.findById(idUser);
         found.setPhoneNumber(body.phoneNumber());
         return this.repository.save(found);
     }
 
-    public EditUsersPasswordRespDTO editMyPassword(UUID idUser, EditUsersPasswordDTO body) {
+    public EditUsersPasswordRespDTO editMyPassword(
+            UUID idUser,
+            EditUsersPasswordDTO body) {
         if (!body.isDifferentPasswords()) throw new BadRequestException("New password cannot be the same as the current password");
         Restaurant found = this.findById(idUser);
         if (bcrypt.matches(body.currentPassword(), found.getPassword())) {
@@ -144,7 +178,9 @@ public class RestaurantsService {
         }
     }
 
-    public Restaurant editMyAddress(UUID idUser, EditUsersAdressDTO body) {
+    public Restaurant editMyAddress(
+            UUID idUser,
+            EditUsersAdressDTO body) {
         Restaurant found = this.findById(idUser);
         if (this.repository.existsByNameAndAddressAndCity(found.getName(), body.address(), body.city())) throw new BadRequestException("There is already a restaurant called " + found.getName() + " in " + body.city() + " at the address " + body.address());
         found.setAddress(body.address());

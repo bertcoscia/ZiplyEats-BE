@@ -42,7 +42,9 @@ public class OrderProductsService {
         return this.repository.findByOrderIdOrder(idOrder);
     }
 
-    public OrderProduct findByIdAndEditToppings(UUID id, EditOrderProductsDTO body) {
+    public OrderProduct findByIdAndEditToppings(
+            UUID id,
+            EditOrderProductsDTO body) {
         OrderProduct found = this.findById(id);
         List<Topping> toppingList = null;
         if (body.toppings() != null && !body.toppings().isEmpty()) {

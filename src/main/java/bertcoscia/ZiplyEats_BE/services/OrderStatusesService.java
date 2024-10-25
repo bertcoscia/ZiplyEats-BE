@@ -41,7 +41,9 @@ public class OrderStatusesService {
         this.repository.delete(this.findByOrderStatus(orderStatus));
     }
 
-    public OrderStatus findByIdAndUpdate(UUID id, OrderStatus body) {
+    public OrderStatus findByIdAndUpdate(
+            UUID id,
+            OrderStatus body) {
         OrderStatus found = this.findById(id);
         if (this.repository.existsByOrderStatusIgnoreCase(body.getOrderStatus()) && !found.getIdOrderStatus().equals(UUID.fromString(body.getOrderStatus()))) throw new BadRequestException("Order status " + body.getOrderStatus() + " already existing");
         found.setOrderStatus(body.getOrderStatus());

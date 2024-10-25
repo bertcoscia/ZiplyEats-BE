@@ -22,7 +22,9 @@ public class ProductCategoriesService {
     @Autowired
     RestaurantsService restaurantsService;
 
-    public ProductCategory save(UUID idRestaurant, NewProductCategoriesDTO body) {
+    public ProductCategory save(
+            UUID idRestaurant,
+            NewProductCategoriesDTO body) {
         Restaurant restaurantFound = this.restaurantsService.findById(idRestaurant);
         if (this.repository.existsByProductCategoryAndRestaurantIdUser(body.productCategory(), restaurantFound.getIdUser())) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a product category called " + body.productCategory());
         return this.repository.save(new ProductCategory(body.productCategory(), restaurantFound));
@@ -36,11 +38,16 @@ public class ProductCategoriesService {
         return this.repository.findById(id).orElseThrow(()-> new NotFoundException(id));
     }
 
-    public ProductCategory findByRestaurantAndProductCategory(UUID idRestaurant, String productCategory) {
+    public ProductCategory findByRestaurantAndProductCategory(
+            UUID idRestaurant,
+            String productCategory) {
         return this.repository.findByRestaurantIdUserAndProductCategoryIgnoreCase(idRestaurant, productCategory).orElseThrow(()-> new NotFoundException("Could not find the category " + productCategory));
     }
 
-    public ProductCategory editMyProductCategory(UUID idRestaurant, UUID idProductCategory, EditProductCategoriesDTO body) {
+    public ProductCategory editMyProductCategory(
+            UUID idRestaurant,
+            UUID idProductCategory,
+            EditProductCategoriesDTO body) {
         ProductCategory found = this.findById(idProductCategory);
         if (!found.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorized to edit this product category.");
         if (this.repository.existsByProductCategoryAndRestaurantIdUser(body.productCategory(), idRestaurant) && !found.getIdProductCategory().equals(idProductCategory)) throw new BadRequestException("The restaurant already has a product called " + body.productCategory());
@@ -52,7 +59,9 @@ public class ProductCategoriesService {
         this.repository.delete(this.findById(id));
     }
 
-    public void deleteMyProductCategory(UUID idProductCategory, UUID idRestaurant) {
+    public void deleteMyProductCategory(
+            UUID idProductCategory,
+            UUID idRestaurant) {
         ProductCategory found = this.findById(idProductCategory);
         if (!found.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorized to delete this product category.");
         this.repository.delete(found);

@@ -32,7 +32,11 @@ public class UserRolesService {
         return this.repository.findByUserRoleIgnoreCase(userRole).orElseThrow(()-> new NotFoundException("Could not find role " + userRole));
     }
 
-    public Page<UserRole> findAll(int page, int size, String sortBy, Sort.Direction direction) {
+    public Page<UserRole> findAll(
+            int page,
+            int size,
+            String sortBy,
+            Sort.Direction direction) {
         if (page > 5) page = 5;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAll(pageable);
@@ -42,7 +46,9 @@ public class UserRolesService {
         this.repository.delete(this.findById(id));
     }
 
-    public UserRole findByIdAndUpdate(UUID id, UserRole body) {
+    public UserRole findByIdAndUpdate(
+            UUID id,
+            UserRole body) {
         UserRole found = this.findById(id);
         if (this.repository.existsByUserRole(body.getUserRole()) && !found.getIdRole().equals(body.getIdRole())) throw new BadRequestException("Role " + body.getUserRole() + " already existing");
         found.setUserRole(body.getUserRole());

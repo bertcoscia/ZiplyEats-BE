@@ -53,7 +53,10 @@ public class UsersController {
     }
 
     @PutMapping("/me")
-    public User updateMyProfile(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody @Validated EditUsersDTO body, BindingResult validationResult) {
+    public User updateMyProfile(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestBody @Validated EditUsersDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -78,7 +81,10 @@ public class UsersController {
 
     @PutMapping("/{idUser}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public User findByIdAndUpdate(@PathVariable UUID idUser, @RequestBody @Validated EditUsersDTO body, BindingResult validationResult) {
+    public User findByIdAndUpdate(
+            @PathVariable UUID idUser,
+            @RequestBody @Validated EditUsersDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -90,7 +96,9 @@ public class UsersController {
     }
 
     @PostMapping("/me/avatar")
-    public CloudinaryRespDTO uploadImage(@RequestParam("avatar") MultipartFile image, @AuthenticationPrincipal User currentAuthenticatedUser) throws IOException {
+    public CloudinaryRespDTO uploadImage(
+            @RequestParam("avatar") MultipartFile image,
+            @AuthenticationPrincipal User currentAuthenticatedUser) throws IOException {
         return this.service.uploadImage(image, currentAuthenticatedUser.getIdUser());
     }
 

@@ -36,7 +36,9 @@ public class AuthController {
 
     @PostMapping("/users-signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public NewEntitiesRespDTO userSignup(@RequestBody @Validated NewUsersDTO body, BindingResult validationResult) {
+    public NewEntitiesRespDTO userSignup(
+            @RequestBody @Validated NewUsersDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -49,7 +51,9 @@ public class AuthController {
 
     @PostMapping("/riders-signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public NewEntitiesRespDTO riderSignup(@RequestBody @Validated NewUsersDTO body, BindingResult validationResult) {
+    public NewEntitiesRespDTO riderSignup(
+            @RequestBody @Validated NewUsersDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -62,7 +66,9 @@ public class AuthController {
 
     @PostMapping("/restaurants-signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public NewEntitiesRespDTO restaurantsSignup(@RequestBody @Validated NewRestaurantsDTO body, BindingResult validationResult) {
+    public NewEntitiesRespDTO restaurantsSignup(
+            @RequestBody @Validated NewRestaurantsDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -74,7 +80,9 @@ public class AuthController {
     }
 
     @PostMapping("/users-login")
-    public LoginRespDTO userLogin(@RequestBody @Validated LoginDTO body, BindingResult validationResult) {
+    public LoginRespDTO userLogin(
+            @RequestBody @Validated LoginDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -86,7 +94,9 @@ public class AuthController {
     }
 
     @PostMapping("/restaurants-login")
-    public LoginRespDTO restaurantLogin(@RequestBody @Validated LoginDTO body, BindingResult validationResult) {
+    public LoginRespDTO restaurantLogin(
+            @RequestBody @Validated LoginDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)

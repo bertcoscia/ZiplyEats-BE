@@ -52,7 +52,10 @@ public class RidersController {
 
     @PutMapping("/me")
     @PreAuthorize("hasAuthority('RIDER')")
-    public Rider updateMyProfile(@AuthenticationPrincipal Rider currentAuthenticatedRider, @RequestBody @Validated EditUsersDTO body, BindingResult validationResult) {
+    public Rider updateMyProfile(
+            @AuthenticationPrincipal Rider currentAuthenticatedRider,
+            @RequestBody @Validated EditUsersDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -77,7 +80,10 @@ public class RidersController {
 
     @PutMapping("/{idRider}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Rider findByIdAndUpdate(@PathVariable UUID idRider, @RequestBody @Validated EditUsersDTO body, BindingResult validationResult) {
+    public Rider findByIdAndUpdate(
+            @PathVariable UUID idRider,
+            @RequestBody @Validated EditUsersDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)

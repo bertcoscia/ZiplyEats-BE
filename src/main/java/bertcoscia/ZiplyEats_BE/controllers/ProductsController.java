@@ -35,7 +35,10 @@ public class ProductsController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('RESTAURANT')")
-    public NewEntitiesRespDTO save(@AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant, @RequestBody @Validated NewProductsDTO body, BindingResult validationResult) {
+    public NewEntitiesRespDTO save(
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
+            @RequestBody @Validated NewProductsDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -65,14 +68,17 @@ public class ProductsController {
 
     @GetMapping("/my-products")
     @PreAuthorize("hasAuthority('RESTAURANT')")
-    public List<Product> getMyProducts(
-            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
+    public List<Product> getMyProducts(@AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
         return this.service.findAllByRestaurant(currentAuthenticatedRestaurant.getIdUser());
     }
 
     @PutMapping("/my-products/{idProduct}")
     @PreAuthorize("hasAuthority('RESTAURANT')")
-    public Product editMyProduct(@PathVariable UUID idProduct, @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant, @RequestBody @Validated EditProductsDTO body, BindingResult validationResult) {
+    public Product editMyProduct(
+            @PathVariable UUID idProduct,
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
+            @RequestBody @Validated EditProductsDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -94,13 +100,18 @@ public class ProductsController {
 
     @DeleteMapping("/my-products/{idProduct}")
     @PreAuthorize("hasAuthority('RESTAURANT')")
-    public void deleteMyProduct(@PathVariable UUID idProduct, @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
+    public void deleteMyProduct(
+            @PathVariable UUID idProduct,
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
         this.service.deleteMyProduct(idProduct, currentAuthenticatedRestaurant.getIdUser());
     }
 
     @PutMapping("/{idProduct}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Product findByIdAndUpdate(@PathVariable UUID idProduct, @RequestBody @Validated EditProductsDTO body, BindingResult validationResult) {
+    public Product findByIdAndUpdate(
+            @PathVariable UUID idProduct,
+            @RequestBody @Validated EditProductsDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -118,8 +129,7 @@ public class ProductsController {
     }
 
     @GetMapping("/{idRestaurant}/products")
-    public List<Product> findAllProductsByRestaurant(
-            @PathVariable UUID idRestaurant) {
+    public List<Product> findAllProductsByRestaurant(@PathVariable UUID idRestaurant) {
         return this.service.findAllByRestaurant(idRestaurant);
     }
 

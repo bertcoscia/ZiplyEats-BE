@@ -8,7 +8,6 @@ import bertcoscia.ZiplyEats_BE.payloads.newEntities.NewToppingsDTO;
 import bertcoscia.ZiplyEats_BE.payloads.responses.NewEntitiesRespDTO;
 import bertcoscia.ZiplyEats_BE.services.ToppingsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
@@ -17,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -29,7 +27,10 @@ public class ToppingsController {
 
     @PostMapping()
     @PreAuthorize("hasAuthority('RESTAURANT')")
-    public NewEntitiesRespDTO save(@AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant, @RequestBody @Validated NewToppingsDTO body, BindingResult validationResult) {
+    public NewEntitiesRespDTO save(
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
+            @RequestBody @Validated NewToppingsDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)

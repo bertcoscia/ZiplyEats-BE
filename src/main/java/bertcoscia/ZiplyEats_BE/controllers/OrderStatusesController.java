@@ -26,7 +26,9 @@ public class OrderStatusesController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public NewEntitiesRespDTO save(@RequestBody @Validated NewOrderStatusesDTO body, BindingResult validationResult) {
+    public NewEntitiesRespDTO save(
+            @RequestBody @Validated NewOrderStatusesDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -64,7 +66,10 @@ public class OrderStatusesController {
 
     @PutMapping("/{idOrderStatus}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public OrderStatus findByIdAndUpdate(@PathVariable UUID idOrderStatus, @RequestBody @Validated OrderStatus body, BindingResult validationResult) {
+    public OrderStatus findByIdAndUpdate(
+            @PathVariable UUID idOrderStatus,
+            @RequestBody @Validated OrderStatus body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)

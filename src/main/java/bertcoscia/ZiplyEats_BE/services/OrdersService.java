@@ -44,7 +44,9 @@ public class OrdersService {
     @Autowired
     ToppingsService toppingsService;
 
-    public Order save(UUID idUser, NewOrdersDTO body) {
+    public Order save(
+            UUID idUser,
+            NewOrdersDTO body) {
         if (body.requestedDeliveryDateTime().isBefore(LocalDateTime.now().plusMinutes(15))) throw new BadRequestException("Requested delivery time not valid. Please try again");
         User userFound = this.usersService.findById(idUser);
         Restaurant restaurantFound = this.restaurantsService.findById(body.idRestaurant());
@@ -72,7 +74,9 @@ public class OrdersService {
         this.repository.delete(this.findById(id));
     }
 
-    public Order restaurantAcceptsOrder(UUID idOrder, UUID idRestaurant) {
+    public Order restaurantAcceptsOrder(
+            UUID idOrder,
+            UUID idRestaurant) {
         Order orderFound = this.findById(idOrder);
         if (!orderFound.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorised to perform the requested action");
         if (!orderFound.getOrderStatus().getOrderStatus().equals("CREATED")) throw new BadRequestException("It is not possible to accept this order");
@@ -81,7 +85,9 @@ public class OrdersService {
         return this.repository.save(orderFound);
     }
 
-    public Order restaurantRefusesOrder(UUID idOrder, UUID idRestaurant) {
+    public Order restaurantRefusesOrder(
+            UUID idOrder,
+            UUID idRestaurant) {
         Order orderFound = this.findById(idOrder);
         if (!orderFound.getRestaurant().getIdUser().equals(idRestaurant)) throw new UnauthorizedException("You are not authorised to perform the requested action");
         if (!orderFound.getOrderStatus().getOrderStatus().equals("CREATED") && !orderFound.getOrderStatus().getOrderStatus().equals("RESTAURANT_ACCEPTED")) throw new BadRequestException("It is not possible to cancel the order");
@@ -95,7 +101,9 @@ public class OrdersService {
         return orderFound;
     }
 
-    public Order assignRiderToOrder(UUID idOrder, UUID idRider) {
+    public Order assignRiderToOrder(
+            UUID idOrder,
+            UUID idRider) {
         Order orderFound = this.findById(idOrder);
         if (!orderFound.getOrderStatus().getOrderStatus().equals("RESTAURANT_ACCEPTED") && !orderFound.getOrderStatus().getOrderStatus().equals("CANCELLED")) throw new BadRequestException("You cannot accept this order. The restaurant has not accepted it yet");
         if (orderFound.getOrderStatus().getOrderStatus().equals("CANCELLED")) throw new BadRequestException("The selected order has been cancelled");
@@ -108,7 +116,9 @@ public class OrdersService {
         return orderFound;
     }
 
-    public Order unassignRiderToOrder(UUID idOrder, UUID idUser) {
+    public Order unassignRiderToOrder(
+            UUID idOrder,
+            UUID idUser) {
         Order orderFound = this.findById(idOrder);
         if (!orderFound.getRider().getIdUser().equals(idUser)) throw new UnauthorizedException("You are not authorised to perform the requested action");
         if (orderFound.getOrderStatus().getOrderStatus().equals("DELIVERED") || orderFound.getOrderStatus().getOrderStatus().equals("IN_TRANSIT")) throw new BadRequestException("It is not possible to cancel this order. Please, contact Support Centre");
@@ -140,26 +150,42 @@ public class OrdersService {
         return orderFound;
     }
 
-    public Order findByIdAndUpdate(UUID idOrder, EditOrdersDTO body) {
+    public Order findByIdAndUpdate(
+            UUID idOrder,
+            EditOrdersDTO body) {
         Order found = this.findById(idOrder);
         found.setDeliveryAddress(body.deliveryAddress());
         return this.repository.save(found);
     }
 
-    public Page<Order> findAllByUserId(UUID idUser, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public Page<Order> findAllByUserId
+            (UUID idUser,
+             int page,
+             int size,
+             String sortBy,
+             Sort.Direction direction,
+             Map<String, String> params) {
         if (page > 20) page = 20;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAllByUserIdUser(idUser, pageable);
     }
 
-    public Page<Order> findAllPastOrdersByRestaurant(UUID idUser, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public Page<Order> findAllPastOrdersByRestaurant(
+            UUID idUser,
+            int page,
+            int size,
+            String sortBy,
+            Sort.Direction direction,
+            Map<String, String> params) {
         Restaurant restaurantFound = this.restaurantsService.findById(idUser);
         if (page > 20) page = 20;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAllPastOrdersByRestaurant(restaurantFound.getIdUser(), pageable);
     }
 
-    public Order findMyOrderById(UUID idOrder, UUID idUser) {
+    public Order findMyOrderById(
+            UUID idOrder,
+            UUID idUser) {
         Order found = this.findById(idOrder);
         if (!found.getUser().getIdUser().equals(idUser)) throw new UnauthorizedException("You are not authorised to see this order");
         return found;
@@ -175,19 +201,32 @@ public class OrdersService {
         return this.repository.findRiderCurrentActiveOrder(riderFound.getIdUser());
     }
 
-    public Page<Order> findAvailableOrders(String city, int page, int size, String sortBy, Sort.Direction direction) {
+    public Page<Order> findAvailableOrders(
+            String city,
+            int page,
+            int size,
+            String sortBy,
+            Sort.Direction direction) {
         if (page > 10) page = 10;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAvailableOrders(city, pageable);
     }
 
-    public Page<Order> findAllPastOrdersByRider(UUID idUser, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public Page<Order> findAllPastOrdersByRider(
+            UUID idUser,
+            int page,
+            int size,
+            String sortBy,
+            Sort.Direction direction,
+            Map<String, String> params) {
         if (page > 20) page = 20;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAllPastOrdersByRider(idUser, pageable);
     }
 
-    public void userCancelOrder(UUID idUser, UUID idOrder) {
+    public void userCancelOrder(
+            UUID idUser,
+            UUID idOrder) {
         Order orderFound = this.findById(idOrder);
         if (!orderFound.getUser().getIdUser().equals(idUser)) throw new UnauthorizedException("You do not have the authorisation to cancel this order");
         if (!orderFound.getOrderStatus().getOrderStatus().equals("CREATED")) throw new BadRequestException("You no longer can cancel this order");

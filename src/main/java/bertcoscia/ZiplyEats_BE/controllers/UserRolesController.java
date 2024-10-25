@@ -27,7 +27,9 @@ public class UserRolesController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public NewEntitiesRespDTO save(@RequestBody @Validated NewUserRolesDTO body, BindingResult validationResult) {
+    public NewEntitiesRespDTO save(
+            @RequestBody @Validated NewUserRolesDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -70,7 +72,10 @@ public class UserRolesController {
 
     @PutMapping("/{idUserRole}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public UserRole findByIdAndUpdate(@PathVariable UUID idUserRole, @RequestBody @Validated UserRole body, BindingResult validationResult) {
+    public UserRole findByIdAndUpdate(
+            @PathVariable UUID idUserRole,
+            @RequestBody @Validated UserRole body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)

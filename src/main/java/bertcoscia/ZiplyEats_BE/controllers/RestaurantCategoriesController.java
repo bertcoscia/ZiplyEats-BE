@@ -29,7 +29,9 @@ public class RestaurantCategoriesController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public NewEntitiesRespDTO save(@RequestBody @Validated NewRestaurantCategoriesDTO body, BindingResult validationResult) {
+    public NewEntitiesRespDTO save(
+            @RequestBody @Validated NewRestaurantCategoriesDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -77,7 +79,10 @@ public class RestaurantCategoriesController {
 
     @PutMapping("/{idRestaurantCategory}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public RestaurantCategory findByIdAndUpdate(@PathVariable UUID idRestaurantCategory, @RequestBody @Validated RestaurantCategory body, BindingResult validationResult) {
+    public RestaurantCategory findByIdAndUpdate(
+            @PathVariable UUID idRestaurantCategory,
+            @RequestBody @Validated RestaurantCategory body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)

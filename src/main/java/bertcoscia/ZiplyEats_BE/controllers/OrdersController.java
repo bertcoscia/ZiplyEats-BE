@@ -44,7 +44,10 @@ public class OrdersController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER')")
-    public NewEntitiesRespDTO save(@AuthenticationPrincipal User currentAuthenticatedUser, @RequestBody @Validated NewOrdersDTO body, BindingResult validationResult) {
+    public NewEntitiesRespDTO save(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestBody @Validated NewOrdersDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -63,13 +66,18 @@ public class OrdersController {
 
     @GetMapping("/my-orders/{idOrder}")
     @PreAuthorize("hasAuthority('USER')")
-    public Order findMyOrderById(@PathVariable UUID idOrder, @AuthenticationPrincipal User currentAuthenticatedUser) {
+    public Order findMyOrderById(
+            @PathVariable UUID idOrder,
+            @AuthenticationPrincipal User currentAuthenticatedUser) {
         return this.service.findMyOrderById(idOrder, currentAuthenticatedUser.getIdUser());
     }
 
     @PutMapping("/{idOrder}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Order findByIdAndUpdate(@PathVariable UUID idOrder, @RequestBody @Validated EditOrdersDTO body, BindingResult validationResult) {
+    public Order findByIdAndUpdate(
+            @PathVariable UUID idOrder,
+            @RequestBody @Validated EditOrdersDTO body,
+            BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             String messages = validationResult.getAllErrors().stream()
                     .map(ObjectError::getDefaultMessage)
@@ -82,25 +90,33 @@ public class OrdersController {
 
     @PatchMapping("/{idOrder}/restaurant-accepts")
     @PreAuthorize("hasAuthority('RESTAURANT')")
-    public Order restaurantAcceptsOrder(@PathVariable UUID idOrder, @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
+    public Order restaurantAcceptsOrder(
+            @PathVariable UUID idOrder,
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
         return this.service.restaurantAcceptsOrder(idOrder, currentAuthenticatedRestaurant.getIdUser());
     }
 
     @PatchMapping("/{idOrder}/restaurant-refuses")
     @PreAuthorize("hasAuthority('RESTAURANT')")
-    public Order restaurantRefusesOrder(@PathVariable UUID idOrder, @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
+    public Order restaurantRefusesOrder(
+            @PathVariable UUID idOrder,
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
         return this.service.restaurantRefusesOrder(idOrder, currentAuthenticatedRestaurant.getIdUser());
     }
 
     @PatchMapping("/{idOrder}/assign-rider")
     @PreAuthorize("hasAuthority('RIDER')")
-    public Order assignRiderToOrder(@PathVariable UUID idOrder, @AuthenticationPrincipal Rider currentAuthenticatedRider) {
+    public Order assignRiderToOrder(
+            @PathVariable UUID idOrder,
+            @AuthenticationPrincipal Rider currentAuthenticatedRider) {
         return this.service.assignRiderToOrder(idOrder, currentAuthenticatedRider.getIdUser());
     }
 
     @PatchMapping("/{idOrder}/unassign-rider")
     @PreAuthorize("hasAuthority('RIDER')")
-    public Order unassignRiderToOrder(@PathVariable UUID idOrder, @AuthenticationPrincipal Rider currentAuthenticatedRider) {
+    public Order unassignRiderToOrder(
+            @PathVariable UUID idOrder,
+            @AuthenticationPrincipal Rider currentAuthenticatedRider) {
         return this.service.unassignRiderToOrder(idOrder, currentAuthenticatedRider.getIdUser());
     }
 

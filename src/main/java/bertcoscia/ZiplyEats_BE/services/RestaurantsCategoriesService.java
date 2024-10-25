@@ -34,7 +34,12 @@ public class RestaurantsCategoriesService {
         return this.repository.findById(id).orElseThrow(()-> new NotFoundException(id));
     }
 
-    public Page<RestaurantCategory> findAll(int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
+    public Page<RestaurantCategory> findAll(
+            int page,
+            int size,
+            String sortBy,
+            Sort.Direction direction,
+            Map<String, String> params) {
         if (page > 100) page = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
         return this.repository.findAll(pageable);
@@ -44,7 +49,9 @@ public class RestaurantsCategoriesService {
         this.repository.delete(this.findById(idRestaurantCategory));
     }
 
-    public RestaurantCategory findByIdAndUpdate(UUID idRestaurantCategory, RestaurantCategory body) {
+    public RestaurantCategory findByIdAndUpdate(
+            UUID idRestaurantCategory,
+            RestaurantCategory body) {
         RestaurantCategory found = this.findById(idRestaurantCategory);
         if (this.repository.existsByRestaurantCategory(body.getRestaurantCategory()) && !found.getIdCategory().equals(body.getIdCategory())) throw new BadRequestException("Category " + body.getRestaurantCategory() + " already existing");
         found.setRestaurantCategory(body.getRestaurantCategory());

@@ -32,7 +32,10 @@ public interface RestaurantsRepository extends JpaRepository<Restaurant, UUID>, 
 
     boolean existsByPhoneNumber(String phoneNumber);
 
-    @Query("SELECT r FROM Restaurant r WHERE LOWER(r.restaurantCategory.restaurantCategory) = LOWER(:category) AND r.city = :city")
+    @Query("""
+    SELECT r FROM Restaurant r
+    WHERE LOWER(r.restaurantCategory.restaurantCategory) = LOWER(:category) AND r.city = :city
+    """)
     Page<Restaurant> findAllByCategoryAndCity(@Param("category") String category, @Param("city") String city, Pageable pageable);
 
     @Query("""
