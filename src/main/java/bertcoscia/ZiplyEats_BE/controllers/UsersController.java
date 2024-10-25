@@ -158,5 +158,19 @@ public class UsersController {
         }
     }
 
-
+    @PatchMapping("/me/edit-address")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    public User editMyAddress(
+            @AuthenticationPrincipal User currentAuthenticatedUser,
+            @RequestBody @Validated EditUsersAdressDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyAddress(currentAuthenticatedUser.getIdUser(), body);
+        }
+    }
 }

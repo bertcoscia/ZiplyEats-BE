@@ -45,7 +45,7 @@ public class OrdersService {
     ToppingsService toppingsService;
 
     public Order save(UUID idUser, NewOrdersDTO body) {
-        if (body.requestedDeliveryDateTime().isBefore(LocalDateTime.now().plusMinutes(30))) throw new BadRequestException("Requested delivery time not valid. Please try again");
+        if (body.requestedDeliveryDateTime().isBefore(LocalDateTime.now().plusMinutes(15))) throw new BadRequestException("Requested delivery time not valid. Please try again");
         User userFound = this.usersService.findById(idUser);
         Restaurant restaurantFound = this.restaurantsService.findById(body.idRestaurant());
         OrderStatus orderStatusFound = this.orderStatusesService.findByOrderStatus("CREATED");

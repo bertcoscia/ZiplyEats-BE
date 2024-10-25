@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -64,15 +65,9 @@ public class ProductsController {
 
     @GetMapping("/my-products")
     @PreAuthorize("hasAuthority('RESTAURANT')")
-    public Page<Product> getMyProducts(
-            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection,
-            @RequestParam Map<String, String> params) {
-        Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return this.service.findAllByRestaurant(currentAuthenticatedRestaurant.getIdUser(), page, size, sortBy, direction, params);
+    public List<Product> getMyProducts(
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
+        return this.service.findAllByRestaurant(currentAuthenticatedRestaurant.getIdUser());
     }
 
     @PutMapping("/my-products/{idProduct}")
@@ -123,15 +118,9 @@ public class ProductsController {
     }
 
     @GetMapping("/{idRestaurant}/products")
-    public Page<Product> findAllProductsByRestaurant(
-            @PathVariable UUID idRestaurant,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection,
-            @RequestParam Map<String, String> params) {
-        Sort.Direction direction = sortDirection.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
-        return this.service.findAllByRestaurant(idRestaurant, page, size, sortBy, direction, params);
+    public List<Product> findAllProductsByRestaurant(
+            @PathVariable UUID idRestaurant) {
+        return this.service.findAllByRestaurant(idRestaurant);
     }
 
 }

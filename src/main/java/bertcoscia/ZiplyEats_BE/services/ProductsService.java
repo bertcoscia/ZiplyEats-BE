@@ -55,10 +55,8 @@ public class ProductsService {
         return this.repository.findAllById(productIds);
     }
 
-    public Page<Product> findAllByRestaurant(UUID idRestaurant, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
-        if (page > 100) page = 100;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        return this.repository.findAllByRestaurantIdUserAndDescriptionIsNotNull(idRestaurant, pageable);
+    public List<Product> findAllByRestaurant(UUID idRestaurant) {
+        return this.repository.findAllByRestaurantIdUserAndDescriptionIsNotNull(idRestaurant);
     }
 
     public Page<Product> findAll(int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {

@@ -152,4 +152,20 @@ public class RidersController {
         }
     }
 
+    @PatchMapping("/me/edit-address")
+    @PreAuthorize("hasAuthority('RIDER')")
+    public Rider editMyAddress(
+            @AuthenticationPrincipal Rider currentAuthenticatedRider,
+            @RequestBody @Validated EditUsersAdressDTO body,
+            BindingResult validationResult) {
+        if (validationResult.hasErrors()) {
+            String messages = validationResult.getAllErrors().stream()
+                    .map(ObjectError::getDefaultMessage)
+                    .collect(Collectors.joining(". "));
+            throw new BadRequestException(messages);
+        } else {
+            return this.service.editMyAddress(currentAuthenticatedRider.getIdUser(), body);
+        }
+    }
+
 }

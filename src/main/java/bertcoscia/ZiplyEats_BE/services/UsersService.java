@@ -135,4 +135,13 @@ public class UsersService {
             throw new UnauthorizedException("Wrong password");
         }
     }
+
+    public User editMyAddress(UUID idUser, EditUsersAdressDTO body) {
+        User found = this.findById(idUser);
+        found.setAddress(body.address());
+        found.setCity(body.city());
+        found.setLatitude(body.latitude());
+        found.setLongitude(body.longitude());
+        return this.repository.save(found);
+    }
 }

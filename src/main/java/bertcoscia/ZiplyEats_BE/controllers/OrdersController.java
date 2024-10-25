@@ -130,7 +130,7 @@ public class OrdersController {
         this.service.findByIdAndDelete(idOrder);
     }
 
-    @GetMapping("/my-orders/user")
+    @GetMapping("/my-orders/user/past-orders")
     @PreAuthorize("hasAuthority('USER')")
     public Page<Order> findAllMyOrdersUser(
             @AuthenticationPrincipal User currentAuthenticatedUser,

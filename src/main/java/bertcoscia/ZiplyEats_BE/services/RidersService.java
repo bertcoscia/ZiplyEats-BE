@@ -122,4 +122,13 @@ public class RidersService {
             throw new UnauthorizedException("Wrong password");
         }
     }
+
+    public Rider editMyAddress(UUID idUser, EditUsersAdressDTO body) {
+        Rider found = this.findById(idUser);
+        found.setAddress(body.address());
+        found.setCity(body.city());
+        found.setLatitude(body.latitude());
+        found.setLongitude(body.longitude());
+        return this.repository.save(found);
+    }
 }
