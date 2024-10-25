@@ -34,8 +34,9 @@ public class ToppingsService {
     public Topping save(UUID idRestaurant, NewToppingsDTO body) {
         Restaurant restaurantFound = this.restaurantsService.findById(idRestaurant);
         if (this.repository.existsByNameAndRestaurantIdUser(body.name(), idRestaurant)) throw new BadRequestException("The restaurant " + restaurantFound.getName() + " already has a topping called " + body.name());
-        ProductCategory productCategoryFound = this.productCategoriesService.findByRestaurantAndProductCategory(restaurantFound.getIdUser(), body.productCategory());
-        return this.repository.save(new Topping(body.name(), body.price(), restaurantFound, productCategoryFound));
+        ProductCategory productCategoryFound = this.productCategoriesService.findByRestaurantAndProductCategory(idRestaurant, body.productCategory());
+        Topping newTopping = new Topping(body.name(), body.price(), restaurantFound, productCategoryFound);
+        return this.repository.save(newTopping);
     }
 
     public Topping findById(UUID id) {
@@ -48,10 +49,8 @@ public class ToppingsService {
         return this.repository.findAll(pageable);
     }
 
-    public Page<Topping> findAllMyToppings(UUID idRestaurant, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
-        if (page > 15) page = 15;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        return this.repository.findAllByRestaurantIdUser(idRestaurant, pageable);
+    public List<Topping> findAllMyToppings(UUID idRestaurant) {
+        return this.repository.findAllByRestaurantIdUser(idRestaurant);
     }
 
     public List<Topping> findAllById(List<UUID> toppingIds) {
@@ -80,10 +79,8 @@ public class ToppingsService {
     }
 
 
-    public List<Topping> findAllByIdRestaurant(UUID idRestaurant, int page, int size, String sortBy, Sort.Direction direction, Map<String, String> params) {
-        if (page > 15) page = 15;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, sortBy));
-        return this.repository.findByRestaurantIdUser(idRestaurant, pageable);
+    public List<Topping> findAllByIdRestaurant(UUID idRestaurant) {
+        return this.repository.findByRestaurantIdUser(idRestaurant);
     }
 
     public void deleteMyTopping(UUID idRestaurant, UUID idTopping) {

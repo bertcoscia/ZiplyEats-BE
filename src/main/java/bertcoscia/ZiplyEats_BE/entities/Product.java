@@ -58,5 +58,6 @@ public class Product {
         this.restaurant = restaurant;
         this.description = null;
         this.canHaveToppings = false;
+        this.productCategory = productCategory;
     }
 }

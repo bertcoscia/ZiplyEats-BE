@@ -8,7 +8,6 @@ import bertcoscia.ZiplyEats_BE.payloads.newEntities.NewToppingsDTO;
 import bertcoscia.ZiplyEats_BE.payloads.responses.NewEntitiesRespDTO;
 import bertcoscia.ZiplyEats_BE.services.ToppingsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -43,25 +42,15 @@ public class ToppingsController {
 
     @GetMapping("/my-toppings")
     @PreAuthorize("hasAuthority('RESTAURANT')")
-    public Page<Topping> findAllMyToppings(
-            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam Map<String, String> params) {
-        String sortBy = "name";
-        Sort.Direction direction = Sort.Direction.ASC;
-        return this.service.findAllMyToppings(currentAuthenticatedRestaurant.getIdUser(), page, size, sortBy, direction, params);
+    public List<Topping> findAllMyToppings(
+            @AuthenticationPrincipal Restaurant currentAuthenticatedRestaurant) {
+        return this.service.findAllMyToppings(currentAuthenticatedRestaurant.getIdUser());
     }
 
     @GetMapping("/{idRestaurant}")
     public List<Topping> findAllToppingsByIdRestaurant(
-            @PathVariable UUID idRestaurant,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam Map<String, String> params) {
-        String sortBy = "name";
-        Sort.Direction direction = Sort.Direction.ASC;
-        return this.service.findAllByIdRestaurant(idRestaurant, page, size, sortBy, direction, params);
+            @PathVariable UUID idRestaurant) {
+        return this.service.findAllByIdRestaurant(idRestaurant);
     }
 
     @PutMapping("/my-toppings/{idTopping}")
